@@ -1,0 +1,149 @@
+# Docker Containerisation Simulator (Minijail Engine)
+
+A low-level Docker container runtime simulator and interactive educational playground. Built with a high-performance **Golang runtime engine** and an authentic **Docker Desktop Vue 3 interface**, this application demonstrates how containers really work under the hood using Linux kernel primitives: **Namespaces**, **Control Groups (cgroups v2)**, **OverlayFS Copy-on-Write (COW)**, and **chroot/pivot_root**.
+
+---
+
+## Key Features
+
+### 1. Authentic Docker Desktop UI
+- **Dual View Modes**: Switch seamlessly between the classic **Docker Desktop Table View** and **Card Grid View**.
+- **Interactive Container Management**: Start, Pause (`SIGSTOP`), Unpause (`SIGCONT`), Stop (`SIGTERM`), Kill (`SIGKILL`), and Delete containers with instant state updates.
+- **Bulk Operations**: Select multiple containers to perform batch start, stop, or removal.
+- **Status Indicators**: Real-time visual pulses for container states: `running` (emerald), `paused` (amber), `stopped` (slate), and `oom_killed` (rose).
+- **Resource Meters**: Live sidebar dials tracking global CPU core CFS allocations and physical memory limits.
+
+### 2. Deep Container Inspector (5 Tabs)
+Click any container row or card to slide open the comprehensive container drawer:
+- **Logs**: Color-coded, auto-scrolling stdout/stderr and kernel lifecycle events with live search filtering.
+- **Exec (Terminal)**: Interactive in-container shell (`root@container:/#`) with pre-set diagnostic commands (`ps -ef`, `cat /proc/1/status`, `ip addr`, `cgroups info`).
+- **Inspect**: Full JSON configuration matching `docker inspect`, including virtual network interfaces, namespace inodes, and cgroup filesystem mounts.
+- **Files (OverlayFS)**: File system browser displaying lower read-only rootfs layers vs. upper read-write Copy-on-Write diffs with the ability to touch new files.
+- **Stats & Cgroups**: Real-time meters for `memory.current` vs `memory.max` and CPU CFS quota usage, plus an interactive **Simulate OOM-Killer** button.
+
+### 3. Docker CLI Console
+- Built-in floating terminal supporting native Docker commands:
+  - `docker ps` / `docker ps -a`
+  - `docker stats`
+  - `docker run -d --name <name> -m <limit> <image> <cmd>`
+  - `docker stop <id>` / `docker kill <id>`
+  - `docker inspect <id>`
+  - `docker images`
+  - `docker version`
+- Command history navigation using <kbd>↑</kbd> and <kbd>↓</kbd> arrow keys.
+
+### 4. Under The Hood: Kernel Primitives
+An educational interactive guide exploring how Docker translates high-level commands into Linux system calls:
+- **`CLONE_NEWPID`**: Process ID isolation, giving containers their own isolated PID 1.
+- **`CLONE_NEWUTS`**: Hostname and domain name virtualization.
+- **`CLONE_NEWNET`**: Network namespace with independent loopback and `veth` virtual ethernet pairs.
+- **`CLONE_NEWNS` & `pivot_root`**: Mount namespace isolation swapping the host rootfs with an OverlayFS root.
+- **`cgroups v2` (`memory.max` & `cpu.max`)**: Hierarchical resource controls and CFS bandwidth throttling.
+
+### 5. Images & Storage Volumes
+- **Base Images Catalog**: Inspect layer sizes, hashes, and run containers directly from `alpine:3.19`, `busybox:1.36`, `ubuntu:22.04`, and `nginx:alpine`.
+- **Volume & Mounts Explorer**: Inspect OverlayFS directories (`LowerDir`, `UpperDir`, `MergedDir`, `WorkDir`).
+
+---
+
+## Tech Stack & Architecture
+
+- **Frontend**:
+  - [Vue 3](https://vuejs.org/) (Composition API, `<script setup>`)
+  - [TypeScript](https://www.typescriptlang.org/)
+  - [Tailwind CSS](https://tailwindcss.com/) (Docker Desktop authentic dark styling)
+  - [Lucide Icons](https://lucide.dev/) (`lucide-vue-next`)
+  - [Vite](https://vitejs.dev/)
+- **Backend Runtime Engine**:
+  - [Golang](https://go.dev/) (`backend/main.go` & `backend/runtime/*`)
+  - RESTful API with automated cgroup metrics, simulated process trees, and CLI engine parser.
+  - Proxying configured seamlessly through Vite (`/api` &rarr; `http://127.0.0.1:9090`).
+
+---
+
+## Getting Started
+
+### Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **Go**: v1.20 or higher (for building the native container engine)
+- **npm** or **yarn**
+
+### Installation
+
+1. Clone or navigate to the repository:
+   ```bash
+   git clone <repo-url>
+   cd docker-containerisation-simulator
+   ```
+
+2. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Build the Go engine binary:
+   ```bash
+   mkdir -p bin
+   go build -o bin/minijail-engine ./backend/main.go
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   The Vite dev server will launch on port `3000` and automatically spawn the Go runtime backend on port `9090`.
+
+5. Open your browser and navigate to:
+   ```text
+   http://localhost:3000
+   ```
+
+---
+
+## Available Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts Vite dev server and automatically spawns the Go engine. |
+| `npm run build` | Compiles the Go engine binary and builds the production Vue 3 static assets into `dist/`. |
+| `npm run lint` | Runs TypeScript type checking (`tsc --noEmit`). |
+| `npm run preview` | Previews the production build locally. |
+| `npm run clean` | Cleans up built artifacts in `dist/` and `bin/`. |
+
+---
+
+## 🧠 How It Works Under The Hood
+
+```text
++-------------------------------------------------------------------------+
+|                         Docker Desktop UI (Vue 3)                       |
+|   [Containers View]   [CLI Modal]   [Container Drawer]   [Kernel Guide] |
++------------------------------------+------------------------------------+
+                                     |  HTTP REST /api/*
+                                     v
++-------------------------------------------------------------------------+
+|                  Minijail Go Runtime Engine (:9090)                     |
+|                                                                         |
+|  +---------------------+  +---------------------+  +------------------+ |
+|  |   CLI Interpreter   |  | Container Lifecycle |  | Cgroups v2 Mgr   | |
+|  |  (docker run/stats) |  | (Create/Start/Stop) |  | (Memory/CPU CFS) | |
+|  +---------------------+  +---------------------+  +------------------+ |
+|                                                                         |
+|  +--------------------------------------------------------------------+ |
+|  |               Linux Primitives Simulation Model                    | |
+|  |  * Namespaces: PID (clone), UTS (hostname), NET (veth), MNT (pivot)| |
+|  |  * Storage: OverlayFS (lowerdir / upperdir / merged)               | |
+|  |  * OOM Killer: Out-of-memory kernel event simulator                | |
+|  +--------------------------------------------------------------------+ |
++-------------------------------------------------------------------------+
+```
+
+1. **Creating a Container**: The spawner allocates a container structure with virtual PID 1, generates unique namespace descriptors (`CLONE_NEWPID`, `CLONE_NEWUTS`, `CLONE_NEWNET`, `CLONE_NEWNS`), sets up OverlayFS mount paths, and binds cgroup limits.
+2. **Resource Constraints**: When memory allocation exceeds `memory.max`, the engine triggers an authentic Linux kernel OOM event (`SIGKILL`), updating the container status to `oom_killed` and appending diagnostic logs.
+3. **Interactive Exec**: Executes simulated Unix utilities inside the container's isolated context with environment variable injection and virtual process hierarchies.
+
+---
+
+## License
+
+MIT License. Designed for educational and systems programming demonstration.
