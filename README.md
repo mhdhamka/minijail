@@ -76,45 +76,6 @@ An educational interactive guide exploring how Docker translates high-level comm
 
 ---
 
-## Getting Started
-
-### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **Go**: v1.20 or higher (for building the native container engine)
-- **npm** or **yarn**
-
-### Installation
-
-1. Clone or navigate to the repository:
-   ```bash
-   git clone <repo-url>
-   cd docker-containerisation-simulator
-   ```
-
-2. Install frontend dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Build the Go engine binary:
-   ```bash
-   mkdir -p bin
-   go build -o bin/minijail-engine ./backend/main.go
-   ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-   The Vite dev server will launch on port `3000` and automatically spawn the Go runtime backend on port `9090`.
-
-5. Open your browser and navigate to:
-   ```text
-   http://localhost:3000
-   ```
-
----
-
 ## Available Scripts
 
 | Command | Description |
@@ -159,6 +120,64 @@ An educational interactive guide exploring how Docker translates high-level comm
 
 ---
 
+## Getting Started
+
+### Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **Go**: v1.20 or higher (for building the native container engine)
+- **npm** or **yarn**
+
+### Installation
+
+1. Clone or navigate to the repository:
+   ```bash
+   git clone <repo-url>
+   cd docker-containerisation-simulator
+   ```
+
+2. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Build the Go engine binary:
+   ```bash
+   mkdir -p bin
+   go build -o bin/minijail-engine ./backend/main.go
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   The Vite dev server will launch on port `3000` and automatically spawn the Go runtime backend on port `9090`.
+
+5. Open your browser and navigate to:
+   ```text
+   http://localhost:3000
+   ```
+
+---
+
+<a id="contributing" name="contributing"></a>
+## Contributing
+
+Contributions, feedback, and regional sensor integrations are warmly welcomed!
+1. Fork the Project (`https://github.com/mhdhamka/minijail/fork`)
+2. Create your Feature Branch (`git checkout -b feature/NewKernelPrimitive`)
+3. Commit your Changes (`git commit -m 'Add support for additional minijail simulation'`)
+4. Push to the Branch (`git push origin feature/NewKernelPrimitive`)
+5. Open a Pull Request
+
+---
+
 ## License
 
-MIT License. Designed for educational and systems programming demonstration.
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+<div align="center">
+  <br>
+  <sub>Engineered with precision for low-level systems programming and container runtime exploration.</sub>
+  <br>
+  <b>Developed & Maintained by <a href="https://github.com/mhdhamka">mdhamka</a></b>
+</div>
