@@ -1,0 +1,41 @@
+name: minijail CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Go for the backend & minijail engine
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      # Setup Node.js for the Vue/Vite frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Build Backend / Engine
+      - name: Build Go Backend
+        run: |
+          cd backend
+          go build -v -o ../bin/minijail-engine main.go
+
+      # Install Frontend Dependencies & Build
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - name: Build Frontend & TypeScript checks
+        run: npm run build
