@@ -63,16 +63,12 @@ An educational interactive guide exploring how Docker translates high-level comm
 
 ## Tech Stack & Architecture
 
-- **Frontend**:
-  - [Vue 3](https://vuejs.org/) (Composition API, `<script setup>`)
-  - [TypeScript](https://www.typescriptlang.org/)
-  - [Tailwind CSS](https://tailwindcss.com/) (Docker Desktop authentic dark styling)
-  - [Lucide Icons](https://lucide.dev/) (`lucide-vue-next`)
-  - [Vite](https://vitejs.dev/)
-- **Backend Runtime Engine**:
-  - [Golang](https://go.dev/) (`backend/main.go` & `backend/runtime/*`)
-  - RESTful API with automated cgroup metrics, simulated process trees, and CLI engine parser.
-  - Proxying configured seamlessly through Vite (`/api` &rarr; `http://127.0.0.1:9090`).
+## Tech Stack & Architecture
+
+| Layer | Technologies & Components |
+| :--- | :--- |
+| **Frontend** | • [Vue 3](https://vuejs.org/) (Composition API, `<script setup>`)<br>• [TypeScript](https://www.typescriptlang.org/)<br>• [Tailwind CSS](https://tailwindcss.com/) (Docker Desktop authentic dark styling)<br>• [Lucide Icons](https://lucide.dev/) (`lucide-vue-next`)<br>• [Vite](https://vitejs.dev/) |
+| **Backend Runtime Engine** | • [Golang](https://go.dev/) (`backend/main.go` & `backend/runtime/*`)<br>• RESTful API with automated cgroup metrics, simulated process trees, and CLI engine parser.<br>• Proxying configured seamlessly through Vite (`/api` &rarr; `http://127.0.0.1:9090`). |
 
 ---
 
@@ -131,8 +127,8 @@ An educational interactive guide exploring how Docker translates high-level comm
 
 1. Clone or navigate to the repository:
    ```bash
-   git clone <repo-url>
-   cd docker-containerisation-simulator
+   git clone https://github.com/mhdhamka/minijail.git
+   cd minijail
    ```
 
 2. Install frontend dependencies:
