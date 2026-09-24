@@ -67,8 +67,8 @@ An educational interactive guide exploring how Docker translates high-level comm
 
 | Layer | Technologies & Components |
 | :--- | :--- |
-| **Frontend** | • [Vue 3](https://vuejs.org/) (Composition API, `<script setup>`)<br>• [TypeScript](https://www.typescriptlang.org/)<br>• [Tailwind CSS](https://tailwindcss.com/) (Docker Desktop authentic dark styling)<br>• [Lucide Icons](https://lucide.dev/) (`lucide-vue-next`)<br>• [Vite](https://vitejs.dev/) |
-| **Backend Runtime Engine** | • [Golang](https://go.dev/) (`backend/main.go` & `backend/runtime/*`)<br>• RESTful API with automated cgroup metrics, simulated process trees, and CLI engine parser.<br>• Proxying configured seamlessly through Vite (`/api` &rarr; `http://127.0.0.1:9090`). |
+| **Frontend** | • [Vue 3] (Composition API, `<script setup>`)<br>• [TypeScript]<br>• [Tailwind CSS] (Docker Desktop authentic dark styling)<br>• [Lucide Icons] (`lucide-vue-next`)<br>• [Vite] |
+| **Backend Runtime Engine** | • [Golang] (`backend/main.go` & `backend/runtime/*`)<br>• RESTful API with automated cgroup metrics, simulated process trees, and CLI engine parser.<br>• Proxying configured seamlessly through Vite (`/api` &rarr; `http://127.0.0.1:9090`). |
 
 ---
 
