@@ -107,7 +107,7 @@ const { theme, toggleTheme } = useTheme();
         class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#1D63ED] hover:bg-[#1A57D0] shadow-sm transition-all cursor-pointer"
       >
         <Plus class="w-4 h-4" />
-        <span>+ Add Container</span>
+        <span>Add Container</span>
       </button>
 
       <!-- User avatar / Docker ID -->

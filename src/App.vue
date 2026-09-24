@@ -371,7 +371,7 @@ useTheme();
                 class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#1D63ED] hover:bg-[#1A57D0] transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
               >
                 <Plus class="w-4 h-4" />
-                <span>+ Run Image</span>
+                <span>Run Image</span>
               </button>
             </div>
           </div>

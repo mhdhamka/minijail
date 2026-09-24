@@ -24,21 +24,16 @@ import {
   Sliders, 
   Cpu, 
   HardDrive, 
-  Sparkles, 
   Send, 
   RefreshCw, 
   Search, 
-  AlertTriangle, 
   FileText, 
   Info, 
   Check, 
   Copy, 
-  Maximize2,
   Shield,
   Layers,
   Zap,
-  CheckCircle2,
-  XCircle
 } from 'lucide-vue-next';
 import DockerLogo from './DockerLogo.vue';
 
@@ -739,7 +734,7 @@ const totalMemoryMB = computed(() => {
         <!-- Terminal Quick Action Bar -->
         <div class="px-3 py-1.5 bg-[#0E1217] border-b border-[#232A35] flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono shrink-0">
           <span class="text-slate-500 text-[10px] font-sans flex items-center gap-1 shrink-0">
-            <Sparkles class="w-3 h-3 text-[#0db7ed]" /> Quick CLI:
+            Quick CLI:
           </span>
           <button 
             @click="executeTerminalCommand('docker ps -a')"
@@ -1082,7 +1077,7 @@ const totalMemoryMB = computed(() => {
           <!-- Quick Presets -->
           <div class="p-3 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-2">
             <span class="text-[11px] text-slate-400 flex items-center gap-1 font-semibold font-sans">
-              <Sparkles class="w-3.5 h-3.5 text-[#0db7ed]" /> One-Click Presets:
+              One-Click Presets:
             </span>
             <div class="grid grid-cols-2 gap-2">
               <button 

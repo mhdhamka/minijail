@@ -8,15 +8,11 @@ import {
   Check, 
   Copy, 
   Layers, 
-  ExternalLink, 
-  Cpu, 
   HardDrive, 
-  FolderTree, 
   Network,
   Zap,
   ShieldCheck,
   Boxes,
-  FileCode2,
   Layers3
 } from 'lucide-vue-next';
 import DockerLogo from './DockerLogo.vue';

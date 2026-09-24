@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
 import { executeCli } from '../api';
-import { X, Terminal, Send, Sparkles, HelpCircle } from 'lucide-vue-next';
+import { X, Send } from 'lucide-vue-next';
 import DockerLogo from './DockerLogo.vue';
 
 const emit = defineEmits<{
@@ -112,7 +112,7 @@ function handleKeydown(e: KeyboardEvent) {
       <!-- Quick Command Buttons -->
       <div class="px-4 py-2 bg-[#0E1217] border-b border-[#232A35] flex items-center gap-2 overflow-x-auto text-[11px] font-mono">
         <span class="text-slate-500 shrink-0 flex items-center gap-1 text-[10px]">
-          <Sparkles class="w-3 h-3 text-[#0db7ed]" /> Quick CLI:
+          Quick CLI:
         </span>
         <button 
           @click="runCli('docker ps -a')"

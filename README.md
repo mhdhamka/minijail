@@ -112,7 +112,7 @@ An educational interactive guide exploring how Docker translates high-level comm
 
 ---
 
-## 🧠 How It Works Under The Hood
+## How It Works Under The Hood
 
 ```text
 +-------------------------------------------------------------------------+
