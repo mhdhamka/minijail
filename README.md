@@ -1,6 +1,21 @@
-# Docker Containerisation Simulator (Minijail Engine)
+<div align="center">
 
-A low-level Docker container runtime simulator and interactive educational playground. Built with a high-performance **Golang runtime engine** and an authentic **Docker Desktop Vue 3 interface**, this application demonstrates how containers really work under the hood using Linux kernel primitives: **Namespaces**, **Control Groups (cgroups v2)**, **OverlayFS Copy-on-Write (COW)**, and **chroot/pivot_root**.
+# minijail
+> Low-Level Docker Container Runtime Simulator, Linux Kernel Primitives, and OverlayFS Playground
+
+[![Vue 3](https://img.shields.io/badge/Frontend-Vue%203.5%20%7C%20Vite-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Golang](https://img.shields.io/badge/Runtime-Golang%20Engine-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+
+<p align="center">
+  <b>An authentic Docker Desktop simulator bridging low-level Linux kernel primitives—Namespaces, Cgroups v2, and OverlayFS Copy-on-Write—with a fully functional Golang container engine and rich interactive dashboard.</b>
+</p>
+
+[Key Features](#key-features) · [Tech Stack](#tech-stack--architecture) · [Getting Started](#getting-started) · [Available Scripts](#available-scripts) · [Under The Hood](#how-it-works-under-the-hood)
+
+</div>
 
 ---
 
