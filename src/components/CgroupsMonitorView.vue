@@ -3,22 +3,15 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import type { Container, MetricPoint } from '../types/container';
 import { stressCpu, stressMemory, startContainer, updateCgroupLimits } from '../api';
 import { 
-  Activity, 
   Cpu, 
   HardDrive, 
-  Zap, 
   AlertTriangle, 
   ShieldAlert, 
   Sliders, 
   Play, 
-  RefreshCw, 
-  Flame, 
   CheckCircle2, 
   FileCode2, 
   Info,
-  Clock,
-  ArrowUpRight,
-  Gauge
 } from 'lucide-vue-next';
 
 interface Props {
@@ -235,10 +228,8 @@ async function handleRestartContainer() {
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#232A35] pb-4">
       <div>
         <div class="flex items-center gap-2">
-          <Activity class="w-5 h-5 text-emerald-400" />
           <h2 class="text-xl font-bold text-white font-sans tracking-tight">Real-Time Resource & Cgroups Throttling</h2>
           <span class="text-xs font-mono text-emerald-400 flex items-center gap-1.5 ml-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             Live (1.8s kernel tick)
           </span>
         </div>
@@ -503,7 +494,6 @@ async function handleRestartContainer() {
             :disabled="currentContainer.status !== 'running' || isStressingCpu"
             class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50 shadow-sm"
           >
-            <Flame class="w-3.5 h-3.5 text-amber-300" />
             {{ isStressingCpu ? 'Generating Load...' : 'Stress CPU Worker' }}
           </button>
         </div>
@@ -673,7 +663,6 @@ async function handleRestartContainer() {
               :disabled="currentContainer.status !== 'running' || isAllocatingMem"
               class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-700 hover:bg-rose-600 text-white flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50"
             >
-              <Zap class="w-3 h-3" />
               +32MB (OOM test)
             </button>
           </div>
@@ -762,7 +751,7 @@ async function handleRestartContainer() {
           <!-- cpu.max -->
           <div class="bg-[#0E1217] border border-[#232A35] rounded-lg p-2.5">
             <div class="text-slate-400 font-semibold mb-1 flex items-center justify-between">
-              <span>📄 cpu.max</span>
+              <span> cpu.max</span>
               <span class="text-[10px] text-slate-500">quota period</span>
             </div>
             <div class="text-cyan-300 bg-[#161B22] p-1.5 rounded text-[11px]">
@@ -776,7 +765,7 @@ async function handleRestartContainer() {
           <!-- memory.max -->
           <div class="bg-[#0E1217] border border-[#232A35] rounded-lg p-2.5">
             <div class="text-slate-400 font-semibold mb-1 flex items-center justify-between">
-              <span>📄 memory.max</span>
+              <span> memory.max</span>
               <span class="text-[10px] text-slate-500">bytes</span>
             </div>
             <div class="text-indigo-300 bg-[#161B22] p-1.5 rounded text-[11px]">
@@ -790,7 +779,7 @@ async function handleRestartContainer() {
           <!-- cpu.stat -->
           <div class="bg-[#0E1217] border border-[#232A35] rounded-lg p-2.5">
             <div class="text-slate-400 font-semibold mb-1 flex items-center justify-between">
-              <span>📄 cpu.stat</span>
+              <span> cpu.stat</span>
               <span class="text-[10px] text-slate-500">accounting</span>
             </div>
             <div class="text-slate-300 bg-[#161B22] p-1.5 rounded text-[10px] leading-tight space-y-0.5">
@@ -803,7 +792,7 @@ async function handleRestartContainer() {
           <!-- memory.events -->
           <div class="bg-[#0E1217] border border-[#232A35] rounded-lg p-2.5">
             <div class="text-slate-400 font-semibold mb-1 flex items-center justify-between">
-              <span>📄 memory.events</span>
+              <span> memory.events</span>
               <span class="text-[10px] text-slate-500">faults & kills</span>
             </div>
             <div class="text-slate-300 bg-[#161B22] p-1.5 rounded text-[10px] leading-tight space-y-0.5">

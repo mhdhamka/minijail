@@ -4,16 +4,10 @@ import {
   FolderTree, 
   HardDrive, 
   Layers, 
-  Plus, 
-  Trash2, 
-  Info, 
-  ExternalLink,
-  ShieldCheck,
-  Eye,
   Layers3
 } from 'lucide-vue-next';
-import OverlayFsPlayground from './OverlayFsPlayground.vue';
-import UnionFsStackDiagram from './UnionFsStackDiagram.vue';
+import OverlayFs from './kernel/OverlayFs.vue';
+import UnionFsStack from './kernel/UnionFsStack.vue';
 
 interface VolumeItem {
   name: string;
@@ -116,12 +110,12 @@ const volumes = ref<VolumeItem[]>([
 
     <!-- SUBVIEW 1: LAYERED VISUAL STACK DIAGRAM (AUFS / OVERLAY2) -->
     <div v-if="activeSubTab === 'stack'">
-      <UnionFsStackDiagram />
+      <UnionFsStack />
     </div>
 
     <!-- SUBVIEW 2: INTERACTIVE OVERLAYFS PLAYGROUND -->
     <div v-else-if="activeSubTab === 'playground'">
-      <OverlayFsPlayground />
+      <OverlayFs />
     </div>
 
     <!-- SUBVIEW 3: RAW VOLUMES TABLE -->

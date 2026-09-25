@@ -2,7 +2,7 @@
 import { ref, onMounted, nextTick } from 'vue';
 import { executeCli } from '../api';
 import { X, Send } from 'lucide-vue-next';
-import DockerLogo from './DockerLogo.vue';
+import DockerLogo from './common/DockerLogo.vue';
 
 const emit = defineEmits<{
   (e: 'close'): void;

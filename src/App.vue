@@ -12,8 +12,8 @@ import {
   createContainer
 } from './api';
 
-import Sidebar, { type ActiveTab } from './components/Sidebar.vue';
-import Header from './components/Header.vue';
+import Sidebar, { type ActiveTab } from './components/common/Sidebar.vue';
+import Header from './components/common/Header.vue';
 import ContainersTable from './components/ContainersTable.vue';
 import ContainerCard from './components/ContainerCard.vue';
 import ContainerDrawer from './components/ContainerDrawer.vue';
@@ -35,11 +35,6 @@ import {
   LayoutList, 
   LayoutGrid, 
   Box, 
-  Layers, 
-  ShieldCheck, 
-  Activity,
-  Terminal,
-  Filter,
   Sliders
 } from 'lucide-vue-next';
 

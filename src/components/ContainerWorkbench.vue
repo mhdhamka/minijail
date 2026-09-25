@@ -35,7 +35,7 @@ import {
   Layers,
   Zap,
 } from 'lucide-vue-next';
-import DockerLogo from './DockerLogo.vue';
+import DockerLogo from './common/DockerLogo.vue';
 
 interface Props {
   initialContainers?: Container[];

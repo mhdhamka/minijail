@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import type { CreateContainerPayload } from '../types/container';
 import { X, Box, Sliders, Shield, Cpu, HardDrive, Sparkles } from 'lucide-vue-next';
-import DockerLogo from './DockerLogo.vue';
+import DockerLogo from './common/DockerLogo.vue';
 
 interface Props {
   initialImage?: string;

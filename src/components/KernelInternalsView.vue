@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import type { KernelPrimitiveGuide, Container } from '../types/container';
 import { fetchKernelPrimitives } from '../api';
 import { 
@@ -7,22 +7,23 @@ import {
   Code, 
   Check, 
   Copy, 
-  Layers, 
   HardDrive, 
   Network,
-  Zap,
+  Workflow,
   ShieldCheck,
   Boxes,
-  Layers3
+  Layers3,
+  Layers,
+  ChevronDown
 } from 'lucide-vue-next';
-import DockerLogo from './DockerLogo.vue';
-import NamespaceDiagram from './NamespaceDiagram.vue';
-import OverlayFsPlayground from './OverlayFsPlayground.vue';
-import LifecycleMachine from './LifecycleMachine.vue';
-import SecurityCapabilitiesSandbox from './SecurityCapabilitiesSandbox.vue';
-import NetworkPacketTracer from './NetworkPacketTracer.vue';
-import ComposeTopologyVisualizer from './ComposeTopologyVisualizer.vue';
-import UnionFsStackDiagram from './UnionFsStackDiagram.vue';
+import DockerLogo from './common/DockerLogo.vue';
+import Namespace from './kernel/Namespace.vue';
+import OverlayFs from './kernel/OverlayFs.vue';
+import Lifecycle from './kernel/Lifecycle.vue';
+import SecurityBox from './kernel/SecurityBox.vue';
+import PacketTracer from './kernel/PacketTracer.vue';
+import ComposeTopo from './kernel/ComposeTopo.vue';
+import UnionFsStack from './kernel/UnionFsStack.vue';
 
 interface Props {
   containers?: Container[];
@@ -35,16 +36,45 @@ const props = withDefaults(defineProps<Props>(), {
 const primitives = ref<KernelPrimitiveGuide[]>([]);
 const activeIndex = ref(0);
 const copied = ref(false);
+const dropdownOpen = ref(false);
 
 export type KernelViewMode = 'unionfs' | 'namespaces' | 'lifecycle' | 'overlayfs' | 'security' | 'network' | 'compose' | 'code';
 const viewMode = ref<KernelViewMode>('unionfs');
 
+const viewLabels: Record<KernelViewMode, { label: string; icon: any; color: string }> = {
+  unionfs: { label: 'UnionFS Stack', icon: Layers3, color: 'text-amber-400' },
+  namespaces: { label: 'Namespaces', icon: Layers, color: 'text-blue-400' },
+  lifecycle: { label: 'Lifecycle Stepper', icon: Workflow, color: 'text-cyan-400' },
+  overlayfs: { label: 'OverlayFS CoW', icon: HardDrive, color: 'text-amber-400' },
+  security: { label: 'Security & Seccomp', icon: ShieldCheck, color: 'text-emerald-400' },
+  network: { label: 'Packet Tracer', icon: Network, color: 'text-indigo-400' },
+  compose: { label: 'Compose Topology', icon: Boxes, color: 'text-pink-400' },
+  code: { label: 'Go Syscalls', icon: Code, color: 'text-slate-300' },
+};
+
+function selectView(mode: KernelViewMode) {
+  viewMode.value = mode;
+  dropdownOpen.value = false;
+}
+
+function handleClickOutside(e: MouseEvent) {
+  const target = e.target as HTMLElement;
+  if (!target.closest('#simulator-dropdown')) {
+    dropdownOpen.value = false;
+  }
+}
+
 onMounted(async () => {
+  document.addEventListener('click', handleClickOutside);
   try {
     primitives.value = await fetchKernelPrimitives();
   } catch (e) {
     console.error(e);
   }
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
 });
 
 function copyCode(code: string) {
@@ -55,220 +85,142 @@ function copyCode(code: string) {
 </script>
 
 <template>
-  <div class="space-y-5 select-none">
-    <!-- Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-[#232A35] pb-4">
+  <div class="space-y-4 select-none">
+    <!-- Header with Right-Aligned Dropdown Switcher -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#21262d] pb-4">
       <div>
-        <h2 class="text-xl font-bold text-white flex items-center gap-2 font-sans">
+        <h2 class="text-lg font-semibold text-slate-100 flex items-center gap-2">
           <span>Under The Hood</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-[#1E2633] text-[#0db7ed] border border-[#2B3545] font-mono">
-            Interactive Container Visualizer Suite
+          <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-mono border border-blue-500/20">
+            Visualizer Suite
           </span>
         </h2>
         <p class="text-xs text-slate-400 mt-0.5">
-          Select any interactive simulator below to visually explore how Linux kernel primitives assemble Docker containers.
+          Explore how Linux kernel primitives assemble container runtimes interactively.
         </p>
       </div>
 
-      <!-- Simulator Tabs Switcher -->
-      <div class="flex flex-wrap items-center gap-1.5 p-1 bg-[#141A22] border border-[#232A35] rounded-xl font-mono text-xs">
+      <!-- Compact Dropdown Switcher -->
+      <div id="simulator-dropdown" class="relative">
         <button 
-          @click="viewMode = 'unionfs'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'unionfs' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="Layered Visual Stack Diagram (AUFS / Overlay2)"
+          @click="dropdownOpen = !dropdownOpen"
+          class="px-3 py-2 rounded-xl bg-[#161b22] hover:bg-[#1f242c] border border-[#21262d] hover:border-[#30363d] transition-all cursor-pointer flex items-center gap-2.5 text-xs font-mono text-slate-200 shadow-sm"
         >
-          <Layers3 class="w-3.5 h-3.5 text-amber-400" />
-          <span>UnionFS Stack</span>
+          <component :is="viewLabels[viewMode].icon" class="w-3.5 h-3.5" :class="viewLabels[viewMode].color" />
+          <span class="font-semibold">{{ viewLabels[viewMode].label }}</span>
+          <ChevronDown class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': dropdownOpen }" />
         </button>
 
-        <button 
-          @click="viewMode = 'namespaces'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'namespaces' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="Namespaces Isolation Boundaries"
+        <!-- Dropdown Menu -->
+        <transition
+          enter-active-class="transition duration-100 ease-out"
+          enter-from-class="transform scale-95 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-75 ease-in"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0"
         >
-          <Layers class="w-3.5 h-3.5" />
-          <span>Namespaces</span>
-        </button>
-
-        <button 
-          @click="viewMode = 'lifecycle'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'lifecycle' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="Container Lifecycle Machine: from runc to app"
-        >
-          <Zap class="w-3.5 h-3.5 text-cyan-400" />
-          <span>Lifecycle Stepper</span>
-        </button>
-
-        <button 
-          @click="viewMode = 'overlayfs'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'overlayfs' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="OverlayFS Copy-on-Write Layering"
-        >
-          <HardDrive class="w-3.5 h-3.5 text-amber-400" />
-          <span>OverlayFS CoW</span>
-        </button>
-
-        <button 
-          @click="viewMode = 'security'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'security' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="Linux Capabilities & Seccomp Sandbox"
-        >
-          <ShieldCheck class="w-3.5 h-3.5 text-emerald-400" />
-          <span>Capabilities & Seccomp</span>
-        </button>
-
-        <button 
-          @click="viewMode = 'network'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'network' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="Virtual veth and iptables NAT Packet Tracer"
-        >
-          <Network class="w-3.5 h-3.5 text-indigo-400" />
-          <span>Packet Tracer</span>
-        </button>
-
-        <button 
-          @click="viewMode = 'compose'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'compose' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="Compose Multi-Container Microservices Topology"
-        >
-          <Boxes class="w-3.5 h-3.5 text-pink-400" />
-          <span>Compose Topology</span>
-        </button>
-
-        <button 
-          @click="viewMode = 'code'"
-          class="px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
-          :class="viewMode === 'code' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-white'"
-          title="Underlying Go Engine Code"
-        >
-          <Code class="w-3.5 h-3.5 text-slate-300" />
-          <span>Go Syscalls</span>
-        </button>
+          <div 
+            v-if="dropdownOpen" 
+            class="absolute right-0 mt-2 w-56 rounded-xl bg-[#161b22] border border-[#30363d] shadow-xl py-1.5 z-50 font-mono text-xs"
+          >
+            <div class="px-3 py-1 text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+              Simulators
+            </div>
+            <button
+              v-for="(meta, mode) in viewLabels"
+              :key="mode"
+              @click="selectView(mode as KernelViewMode)"
+              class="w-full flex items-center gap-2.5 px-3 py-2 text-left transition-colors cursor-pointer"
+              :class="viewMode === mode ? 'bg-blue-500/10 text-blue-400 font-semibold' : 'text-slate-300 hover:bg-[#1f242c] hover:text-slate-100'"
+            >
+              <component :is="meta.icon" class="w-3.5 h-3.5" :class="meta.color" />
+              <span>{{ meta.label }}</span>
+            </button>
+          </div>
+        </transition>
       </div>
     </div>
 
-    <!-- Educational Concept Banner -->
-    <div class="p-3.5 rounded-xl bg-[#161B22] border border-[#232A35] flex items-start gap-3 text-xs">
-      <div class="w-9 h-9 rounded-lg bg-[#1D63ED]/20 text-[#0db7ed] flex items-center justify-center shrink-0 border border-[#1D63ED]/30">
-        <DockerLogo :size="24" />
+    <!-- Minimalist Concept Banner -->
+    <div class="p-3 rounded-xl bg-[#161b22]/50 border border-[#21262d] flex items-center gap-3 text-xs">
+      <div class="text-blue-400 shrink-0">
+        <DockerLogo :size="20" />
       </div>
-      <div>
-        <div class="font-bold text-slate-200">The Secret: Containers are Just Ordinary Linux Processes!</div>
-        <div class="text-slate-400 mt-0.5 leading-relaxed font-sans">
-          Unlike Virtual Machines (which emulate physical hardware via hypervisors), a Docker container is simply a standard Linux process run with unshared namespaces (<code class="text-cyan-400">CLONE_NEWPID</code>, <code class="text-indigo-400">CLONE_NEWNET</code>, <code class="text-amber-400">CLONE_NEWNS</code>), bounded by cgroups (<code class="text-cyan-400">/sys/fs/cgroup/memory.max</code>), restricted by capabilities (<code class="text-emerald-400">capset</code>), and jailed in an AUFS/Overlay2 union filesystem root via <code class="text-cyan-400">pivot_root</code>.
-        </div>
+      <div class="text-slate-400 leading-relaxed font-sans">
+        <strong class="text-slate-200">Containers are standard Linux processes:</strong> Isolated using namespaces, resource-bounded by cgroups, and layered through union filesystems.
       </div>
     </div>
 
-    <!-- VIEW 0: LAYERED VISUAL STACK DIAGRAM (AUFS / OVERLAY2) -->
-    <UnionFsStackDiagram 
-      v-if="viewMode === 'unionfs'" 
-    />
+    <!-- Active View Component Renderer -->
+    <UnionFsStack v-if="viewMode === 'unionfs'" />
+    <Namespace v-else-if="viewMode === 'namespaces'" :containers="containers" />
+    <Lifecycle v-else-if="viewMode === 'lifecycle'" />
+    <OverlayFs v-else-if="viewMode === 'overlayfs'" />
+    <SecurityBox v-else-if="viewMode === 'security'" />
+    <PacketTracer v-else-if="viewMode === 'network'" />
+    <ComposeTopo v-else-if="viewMode === 'compose'" />
 
-    <!-- VIEW 1: NAMESPACE BOUNDARY DIAGRAM -->
-    <NamespaceDiagram 
-      v-else-if="viewMode === 'namespaces'" 
-      :containers="containers" 
-    />
-
-    <!-- VIEW 2: STEP-BY-STEP LIFECYCLE MACHINE -->
-    <LifecycleMachine 
-      v-else-if="viewMode === 'lifecycle'" 
-    />
-
-    <!-- VIEW 3: OVERLAYFS LAYER STACKER (COPY-ON-WRITE PLAYGROUND) -->
-    <OverlayFsPlayground 
-      v-else-if="viewMode === 'overlayfs'" 
-    />
-
-    <!-- VIEW 4: LINUX CAPABILITIES & SECCOMP SANDBOX -->
-    <SecurityCapabilitiesSandbox 
-      v-else-if="viewMode === 'security'" 
-    />
-
-    <!-- VIEW 5: VIRTUAL NETWORKING & PACKET TRACER -->
-    <NetworkPacketTracer 
-      v-else-if="viewMode === 'network'" 
-    />
-
-    <!-- VIEW 6: COMPOSE MULTI-CONTAINER TOPOLOGY -->
-    <ComposeTopologyVisualizer 
-      v-else-if="viewMode === 'compose'" 
-    />
-
-    <!-- VIEW 7: GO PRIMITIVES & CODE -->
+    <!-- Go Primitives & Code View -->
     <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-      <!-- Left Column: Primitive Items List -->
-      <div class="lg:col-span-4 space-y-2">
+      <div class="lg:col-span-4 space-y-1.5">
         <div 
           v-for="(item, idx) in primitives"
           :key="idx"
           @click="activeIndex = idx"
-          class="p-3 rounded-xl border transition-all cursor-pointer font-mono text-xs"
+          class="p-2.5 rounded-xl border transition-all cursor-pointer font-mono text-xs"
           :class="activeIndex === idx 
-            ? 'bg-[#1D63ED]/15 border-[#1D63ED] text-white shadow-sm' 
-            : 'bg-[#161B22] border-[#232A35] text-slate-400 hover:bg-[#1A222D] hover:text-slate-200'"
+            ? 'bg-[#1f242c] border-blue-500/50 text-slate-100 shadow-sm' 
+            : 'bg-[#161b22]/60 border-[#21262d] text-slate-400 hover:bg-[#161b22] hover:text-slate-200'"
         >
           <div class="flex items-center justify-between">
-            <span class="font-bold" :class="activeIndex === idx ? 'text-[#0db7ed]' : 'text-slate-300'">
+            <span class="font-semibold text-slate-200">
               {{ item.name }}
             </span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#0E1217] border border-[#2B3545]">
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#0d1117] text-slate-400 border border-[#21262d]">
               {{ item.LinuxFlag || item.linuxFlag }}
             </span>
-          </div>
-          <div class="text-[11px] text-slate-400 mt-1 font-sans line-clamp-2">
-            {{ item.explanation }}
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Detail & Go Code -->
-      <div class="lg:col-span-8 rounded-xl bg-[#161B22] border border-[#232A35] p-5 space-y-4 font-mono text-xs" v-if="primitives[activeIndex]">
+      <div class="lg:col-span-8 rounded-xl bg-[#161b22]/40 border border-[#21262d] p-4 space-y-3 font-mono text-xs" v-if="primitives[activeIndex]">
         <div class="flex items-start justify-between">
           <div>
-            <h3 class="text-base font-bold text-white flex items-center gap-2">
-              <Shield class="w-4 h-4 text-[#0db7ed]" />
+            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+              <Shield class="w-4 h-4 text-blue-400" />
               <span>{{ primitives[activeIndex].name }}</span>
             </h3>
-            <p class="text-slate-300 text-xs mt-1.5 font-sans leading-relaxed">
+            <p class="text-slate-400 text-xs mt-1 font-sans leading-relaxed">
               {{ primitives[activeIndex].explanation }}
             </p>
           </div>
-          <span class="px-2.5 py-1 rounded bg-[#0E1217] text-[#0db7ed] border border-[#2B3545] font-bold text-[11px] shrink-0">
+          <span class="px-2 py-0.5 rounded bg-[#0d1117] text-blue-400 border border-[#21262d] font-bold text-[10px] shrink-0">
             {{ primitives[activeIndex].LinuxFlag || primitives[activeIndex].linuxFlag }}
           </span>
         </div>
 
-        <div class="p-3 rounded-lg bg-[#0E1217] border border-[#232A35] flex items-center justify-between text-[11px]">
-          <span class="text-slate-400">Syscall / Kernel Location:</span>
+        <div class="p-2.5 rounded-lg bg-[#0d1117] border border-[#21262d] flex items-center justify-between text-[11px]">
+          <span class="text-slate-500">Syscall Location:</span>
           <span class="text-emerald-400 font-bold">{{ primitives[activeIndex].SyscallFile || primitives[activeIndex].syscallFile }}</span>
         </div>
 
-        <!-- Golang Implementation Code -->
-        <div class="rounded-xl border border-[#232A35] bg-[#0A0D12] overflow-hidden">
-          <div class="px-4 py-2 bg-[#11161D] border-b border-[#232A35] flex items-center justify-between">
+        <div class="rounded-xl border border-[#21262d] bg-[#090d12] overflow-hidden">
+          <div class="px-3 py-2 bg-[#11161d] border-b border-[#21262d] flex items-center justify-between">
             <span class="text-[11px] text-slate-400 flex items-center gap-1.5">
-              <Code class="w-3.5 h-3.5 text-[#0db7ed]" />
-              <span>Go Engine Implementation (minijail-go)</span>
+              <Code class="w-3.5 h-3.5 text-blue-400" />
+              <span>minijail-go implementation</span>
             </span>
             <button 
               @click="copyCode(primitives[activeIndex].GoCode || primitives[activeIndex].goCode)"
-              class="px-2 py-1 rounded text-[10px] text-slate-300 hover:text-white bg-[#1A222D] hover:bg-[#243040] border border-[#2D3848] transition-colors flex items-center gap-1 cursor-pointer"
+              class="px-2 py-1 rounded text-[10px] text-slate-300 hover:text-white bg-[#161b22] hover:bg-[#21262d] border border-[#30363d] transition-colors flex items-center gap-1 cursor-pointer"
             >
               <Check v-if="copied" class="w-3 h-3 text-emerald-400" />
               <Copy v-else class="w-3 h-3 text-slate-400" />
-              <span>{{ copied ? 'Copied' : 'Copy Code' }}</span>
+              <span>{{ copied ? 'Copied' : 'Copy' }}</span>
             </button>
           </div>
-          <pre class="p-4 text-cyan-200 text-xs overflow-x-auto leading-relaxed"><code>{{ primitives[activeIndex].GoCode || primitives[activeIndex].goCode }}</code></pre>
+          <pre class="p-3 text-cyan-200/90 text-xs overflow-x-auto leading-relaxed"><code>{{ primitives[activeIndex].GoCode || primitives[activeIndex].goCode }}</code></pre>
         </div>
       </div>
     </div>

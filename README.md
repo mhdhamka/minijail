@@ -63,8 +63,6 @@ An educational interactive guide exploring how Docker translates high-level comm
 
 ## Tech Stack & Architecture
 
-## Tech Stack & Architecture
-
 | Layer | Technologies & Components |
 | :--- | :--- |
 | **Frontend** | • [Vue 3] (Composition API, `<script setup>`)<br>• [TypeScript]<br>• [Tailwind CSS] (Docker Desktop authentic dark styling)<br>• [Lucide Icons] (`lucide-vue-next`)<br>• [Vite] |
