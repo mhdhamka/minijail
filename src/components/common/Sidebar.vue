@@ -225,7 +225,7 @@ const emit = defineEmits<{
             {{ connected ? 'Engine running' : 'Connecting...' }}
           </span>
         </div>
-        <span class="text-[10px] text-slate-500 font-mono">v27.0.3</span>
+        <span class="text-[10px] text-slate-500 font-mono">v1.0.0</span>
       </div>
 
       <!-- Cgroups & Telemetry Cards -->

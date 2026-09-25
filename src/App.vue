@@ -20,8 +20,8 @@ import ContainerDrawer from './components/ContainerDrawer.vue';
 import ContainerSpawnerModal from './components/ContainerSpawnerModal.vue';
 import DockerCliModal from './components/DockerCliModal.vue';
 import KernelPrimitivesModal from './components/KernelPrimitivesModal.vue';
-import ImagesView from './components/ImagesView.vue';
-import VolumesView from './components/VolumesView.vue';
+import Images from './components/Images.vue';
+import Volumes from './components/Volumes.vue';
 import KernelInternalsView from './components/KernelInternalsView.vue';
 import ContainerWorkbench from './components/ContainerWorkbench.vue';
 import CgroupsMonitorView from './components/CgroupsMonitorView.vue';
@@ -35,7 +35,8 @@ import {
   LayoutList, 
   LayoutGrid, 
   Box, 
-  Sliders
+  Sliders,
+  Activity
 } from 'lucide-vue-next';
 
 const containers = ref<Container[]>([]);
@@ -242,14 +243,14 @@ async function handleDeploy(payload: CreateContainerPayload) {
     console.error(e);
   }
 }
-import { useTheme } from './composables/useTheme';
 
+import { useTheme } from './composables/useTheme';
 useTheme();
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#0F1318] text-slate-100 flex selection:bg-[#1D63ED]/30 app-root-bg transition-colors duration-200">
-    <!-- Docker Desktop Left Sidebar -->
+  <div class="min-h-screen bg-[#0b0e14] text-slate-100 flex selection:bg-blue-500/30 app-root-bg transition-colors duration-200">
+    <!-- Left Sidebar -->
     <Sidebar 
       :active-tab="activeTab"
       :running-containers-count="activeCount"
@@ -262,9 +263,8 @@ useTheme();
       @open-spawner="openSpawnerWithImage('alpine:3.19')"
     />
 
-    <!-- Right Main Work Area -->
+    <!-- Main Workspace -->
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-      <!-- Top Header Navigation -->
       <Header 
         :connected="connected"
         :active-count="activeCount"
@@ -276,9 +276,8 @@ useTheme();
         @refresh="loadContainers"
       />
 
-      <!-- Main Content Views -->
-      <main class="flex-1 p-4 sm:p-6 space-y-5 max-w-7xl w-full mx-auto">
-        <!-- 0. WORKBENCH (Simulated Terminal Left + Container Operations Right) -->
+      <main class="flex-1 p-5 sm:p-7 space-y-6 max-w-7xl w-full mx-auto">
+        <!-- 0. WORKBENCH -->
         <ContainerWorkbench 
           v-if="activeTab === 'workbench'"
           :initial-containers="containers"
@@ -289,81 +288,80 @@ useTheme();
         />
 
         <!-- 1. CONTAINERS VIEW -->
-        <div v-else-if="activeTab === 'containers'" class="space-y-4">
-          <!-- Action & Filter Bar (Authentic Docker Desktop styling) -->
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <!-- Left: Title & Count -->
+        <div v-else-if="activeTab === 'containers'" class="space-y-5">
+          <!-- Action & Filter Bar -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-slate-900/50 backdrop-blur-md p-4 rounded-2xl border border-slate-800/80 shadow-lg">
             <div>
-              <h2 class="text-xl font-bold text-white flex items-center gap-2 font-sans">
-                <span>Containers</span>
-                <span class="text-xs px-2 py-0.5 rounded-full bg-[#1E2633] text-slate-400 border border-[#2B3545] font-mono">
+              <div class="flex items-center gap-2.5">
+                <h2 class="text-xl font-bold text-white tracking-tight">Containers</h2>
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-mono font-medium">
                   {{ filteredContainers.length }}
                 </span>
-              </h2>
-              <p class="text-xs text-slate-400 mt-0.5">
+              </div>
+              <p class="text-xs text-slate-400 mt-1">
                 Isolated Linux process sandboxes bounded by cgroups v2 and OverlayFS.
               </p>
             </div>
 
-            <!-- Right: View Mode Toggle & Bulk Actions -->
-            <div class="flex items-center gap-2">
-              <!-- Bulk Actions if selected -->
-              <div v-if="selectedIds.length > 0" class="flex items-center gap-1.5 bg-[#161B22] p-1 rounded-lg border border-[#232A35]">
+            <!-- View Mode Toggle & Bulk Actions -->
+            <div class="flex items-center gap-3 flex-wrap">
+              <!-- Bulk Actions Bar -->
+              <div v-if="selectedIds.length > 0" class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 animate-fadeIn">
                 <span class="text-xs px-2 text-slate-400 font-mono">{{ selectedIds.length }} selected:</span>
                 <button 
                   @click="handleBulkStart"
-                  class="p-1.5 rounded hover:bg-[#202836] text-emerald-400 transition-colors cursor-pointer"
+                  class="p-1.5 rounded-lg hover:bg-slate-800 text-emerald-400 transition-colors cursor-pointer"
                   title="Start selected"
                 >
                   <Play class="w-3.5 h-3.5" />
                 </button>
                 <button 
                   @click="handleBulkStop"
-                  class="p-1.5 rounded hover:bg-[#202736] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer"
                   title="Stop selected"
                 >
                   <Square class="w-3.5 h-3.5" />
                 </button>
                 <button 
                   @click="handleBulkDelete"
-                  class="p-1.5 rounded hover:bg-[#202836] text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
+                  class="p-1.5 rounded-lg hover:bg-slate-800 text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
                   title="Delete selected"
                 >
                   <Trash2 class="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <!-- View Switcher (Table vs Cards vs Workbench) -->
-              <div class="flex items-center rounded-lg bg-[#161B22] border border-[#232A35] p-1 text-slate-400">
+              <!-- View Switcher -->
+              <div class="flex items-center rounded-xl bg-slate-950 border border-slate-800 p-1 text-slate-400 shadow-inner">
                 <button
                   @click="activeTab = 'workbench'"
-                  class="p-1.5 rounded transition-colors cursor-pointer text-slate-400 hover:text-white"
-                  title="Split Workbench (Simulated Terminal + Operations)"
+                  class="p-2 rounded-lg transition-all cursor-pointer hover:text-white"
+                  title="Split Workbench"
                 >
                   <Sliders class="w-4 h-4" />
                 </button>
                 <button
                   @click="viewMode = 'table'"
-                  class="p-1.5 rounded transition-colors cursor-pointer"
-                  :class="viewMode === 'table' ? 'bg-[#1D63ED] text-white shadow-sm' : 'hover:text-slate-200'"
-                  title="Table view (Docker Desktop default)"
+                  class="p-2 rounded-lg transition-all cursor-pointer"
+                  :class="viewMode === 'table' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/30' : 'hover:text-slate-200'"
+                  title="Table view"
                 >
                   <LayoutList class="w-4 h-4" />
                 </button>
                 <button
                   @click="viewMode = 'cards'"
-                  class="p-1.5 rounded transition-colors cursor-pointer"
-                  :class="viewMode === 'cards' ? 'bg-[#1D63ED] text-white shadow-sm' : 'hover:text-slate-200'"
+                  class="p-2 rounded-lg transition-all cursor-pointer"
+                  :class="viewMode === 'cards' ? 'bg-blue-600 text-white shadow-md shadow-blue-900/30' : 'hover:text-slate-200'"
                   title="Card grid view"
                 >
                   <LayoutGrid class="w-4 h-4" />
                 </button>
               </div>
 
-              <!-- + Run Image -->
+              <!-- Run Image Button -->
               <button
                 @click="openSpawnerWithImage('alpine:3.19')"
-                class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#1D63ED] hover:bg-[#1A57D0] transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
+                class="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-blue-600/20"
               >
                 <Plus class="w-4 h-4" />
                 <span>Run Image</span>
@@ -371,56 +369,56 @@ useTheme();
             </div>
           </div>
 
-          <!-- Filter Tabs -->
-          <div class="flex items-center gap-1 overflow-x-auto text-xs font-mono border-b border-[#232A35] pb-2">
+          <!-- Status Filter Tabs -->
+          <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-mono border-b border-slate-800/80 pb-3">
             <button 
               @click="statusFilter = 'all'"
-              class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0 font-medium"
+              class="px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0 font-medium"
               :class="statusFilter === 'all' 
-                ? 'bg-[#1E2633] text-[#0db7ed] border border-[#2D3848] font-semibold' 
-                : 'text-slate-400 hover:text-slate-200'"
+                ? 'bg-slate-800 text-cyan-400 border border-slate-700 shadow-sm font-semibold' 
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'"
             >
               All ({{ containers.length }})
             </button>
             <button 
               @click="statusFilter = 'running'"
-              class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0 font-medium"
+              class="px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0 font-medium"
               :class="statusFilter === 'running' 
-                ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800 font-semibold' 
-                : 'text-slate-400 hover:text-slate-200'"
+                ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 shadow-sm font-semibold' 
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'"
             >
               Running ({{ containers.filter(c => c.status === 'running').length }})
             </button>
             <button 
               @click="statusFilter = 'paused'"
-              class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0 font-medium"
+              class="px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0 font-medium"
               :class="statusFilter === 'paused' 
-                ? 'bg-amber-950/80 text-amber-400 border border-amber-800 font-semibold' 
-                : 'text-slate-400 hover:text-slate-200'"
+                ? 'bg-amber-950/80 text-amber-400 border border-amber-800/80 shadow-sm font-semibold' 
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'"
             >
               Paused ({{ containers.filter(c => c.status === 'paused').length }})
             </button>
             <button 
               @click="statusFilter = 'stopped'"
-              class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0 font-medium"
+              class="px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0 font-medium"
               :class="statusFilter === 'stopped' 
-                ? 'bg-[#1E2633] text-slate-300 border border-[#2D3848] font-semibold' 
-                : 'text-slate-400 hover:text-slate-200'"
+                ? 'bg-slate-800 text-slate-300 border border-slate-700 shadow-sm font-semibold' 
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'"
             >
               Stopped ({{ containers.filter(c => c.status === 'stopped').length }})
             </button>
             <button 
               @click="statusFilter = 'oom_killed'"
-              class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0 font-medium"
+              class="px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0 font-medium"
               :class="statusFilter === 'oom_killed' 
-                ? 'bg-rose-950 text-rose-300 border border-rose-800 font-semibold' 
-                : 'text-slate-400 hover:text-slate-200'"
+                ? 'bg-rose-950 text-rose-300 border border-rose-800 shadow-sm font-semibold' 
+                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'"
             >
               OOM Killed ({{ containers.filter(c => c.status === 'oom_killed').length }})
             </button>
           </div>
 
-          <!-- Table View (Classic Docker Desktop layout) -->
+          <!-- Table View -->
           <ContainersTable 
             v-if="viewMode === 'table'"
             :containers="filteredContainers"
@@ -437,7 +435,7 @@ useTheme();
           />
 
           <!-- Grid / Cards View -->
-          <div v-else-if="filteredContainers.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div v-else-if="filteredContainers.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <ContainerCard 
               v-for="container in filteredContainers"
               :key="container.id"
@@ -453,9 +451,9 @@ useTheme();
           </div>
 
           <!-- Empty State -->
-          <div v-else class="p-12 text-center rounded-xl bg-[#161B22] border border-[#232A35] space-y-4">
-            <div class="w-12 h-12 mx-auto rounded-xl bg-[#1A222D] flex items-center justify-center text-slate-500">
-              <Box class="w-6 h-6" />
+          <div v-else class="p-14 text-center rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4 shadow-xl">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-slate-950 flex items-center justify-center text-slate-500 border border-slate-800">
+              <Box class="w-7 h-7" />
             </div>
             <div>
               <h3 class="text-sm font-bold text-slate-200 font-mono">No Containers Found</h3>
@@ -465,7 +463,7 @@ useTheme();
             </div>
             <button 
               @click="openSpawnerWithImage('alpine:3.19')"
-              class="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-[#1D63ED] hover:bg-[#1A57D0] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+              class="px-4.5 py-2.5 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 transition-all inline-flex items-center gap-1.5 cursor-pointer shadow-lg shadow-blue-600/20"
             >
               <Plus class="w-4 h-4" />
               <span>Deploy New Container</span>
@@ -474,23 +472,23 @@ useTheme();
         </div>
 
         <!-- 2. IMAGES VIEW -->
-        <ImagesView 
+        <Images 
           v-else-if="activeTab === 'images'"
           @run-image="openSpawnerWithImage"
         />
 
         <!-- 3. VOLUMES VIEW -->
-        <VolumesView 
+        <Volumes 
           v-else-if="activeTab === 'volumes'"
         />
 
-        <!-- 4. UNDER THE HOOD (KERNEL INTERNALS) VIEW -->
+        <!-- 4. KERNEL INTERNALS VIEW -->
         <KernelInternalsView 
           v-else-if="activeTab === 'kernel'"
           :containers="containers"
         />
 
-        <!-- 5. REAL-TIME RESOURCE MONITOR (CGROUPS THROTTLING & MEMORY CHARTS) -->
+        <!-- 5. CGROUPS MONITOR VIEW -->
         <CgroupsMonitorView 
           v-else-if="activeTab === 'metrics'"
           :containers="containers"
@@ -500,8 +498,6 @@ useTheme();
     </div>
 
     <!-- Modals & Drawers -->
-
-    <!-- Container Details Drawer (Logs, Exec, Inspect, Files, Stats) -->
     <ContainerDrawer 
       v-if="activeDrawerContainer"
       :container="activeDrawerContainer"
@@ -510,7 +506,6 @@ useTheme();
       @refresh="loadContainers"
     />
 
-    <!-- Container Spawner Modal -->
     <ContainerSpawnerModal 
       v-if="showSpawner"
       :initial-image="spawnerImage"
@@ -518,14 +513,12 @@ useTheme();
       @deploy="handleDeploy"
     />
 
-    <!-- Docker CLI Terminal Modal -->
     <DockerCliModal 
       v-if="showCli"
       @close="showCli = false"
       @refresh="loadContainers"
     />
 
-    <!-- Kernel Primitives Modal Quick View -->
     <KernelPrimitivesModal 
       v-if="showPrimitivesModal"
       @close="showPrimitivesModal = false"

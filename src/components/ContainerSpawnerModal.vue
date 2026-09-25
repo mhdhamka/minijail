@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import type { CreateContainerPayload } from '../types/container';
-import { X, Box, Sliders, Shield, Cpu, HardDrive, Sparkles } from 'lucide-vue-next';
+import { X, Box, Sliders, Shield, Cpu, HardDrive } from 'lucide-vue-next';
 import DockerLogo from './common/DockerLogo.vue';
 
 interface Props {
@@ -111,7 +111,7 @@ function handleDeploy() {
       <!-- Presets Banner -->
       <div class="px-5 py-2.5 bg-[#0E1217] border-b border-[#232A35] flex items-center gap-2 flex-wrap text-xs">
         <span class="text-slate-400 flex items-center gap-1 font-medium text-[11px]">
-          <Sparkles class="w-3.5 h-3.5 text-[#0db7ed]" /> Quick Presets:
+          Quick Presets:
         </span>
         <button 
           type="button" 

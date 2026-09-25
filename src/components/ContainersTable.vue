@@ -6,14 +6,9 @@ import {
   Square, 
   Pause, 
   Terminal, 
-  Activity, 
   Trash2, 
-  FolderTree, 
   Flame, 
-  Code,
   Box,
-  ExternalLink,
-  ChevronRight
 } from 'lucide-vue-next';
 
 interface Props {
