@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick, watch } from 'vue';
-import type { Container, CreateContainerPayload } from '../types/container';
+import type { Container, CreateContainerPayload } from '../../types/container.ts';
 import { 
   fetchContainers, 
   executeCli, 
@@ -12,7 +12,7 @@ import {
   killContainer, 
   deleteContainer,
   stressMemory 
-} from '../api';
+} from '../../api.ts';
 import { 
   Terminal, 
   Play, 
@@ -35,7 +35,7 @@ import {
   Layers,
   Zap,
 } from 'lucide-vue-next';
-import DockerLogo from './common/DockerLogo.vue';
+import DockerLogo from '../common/DockerLogo.vue';
 
 interface Props {
   initialContainers?: Container[];

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
-import type { Container } from '../types/container';
-import { execCommand } from '../api';
+import type { Container } from '../../types/container';
+import { execCommand } from '../../api';
 import { X, Terminal as TerminalIcon, Send, Sparkles, RefreshCw } from 'lucide-vue-next';
 
 interface Props {

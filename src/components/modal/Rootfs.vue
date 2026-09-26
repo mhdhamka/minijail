@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Container } from '../types/container';
-import { execCommand } from '../api';
+import type { Container } from '../../types/container';
+import { execCommand } from '../../api';
 import { 
   X, 
   FolderTree, 
@@ -11,7 +11,6 @@ import {
   Plus, 
   ArrowDown, 
   FilePlus, 
-  ExternalLink 
 } from 'lucide-vue-next';
 
 interface Props {

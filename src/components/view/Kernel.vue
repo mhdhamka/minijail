@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import type { KernelPrimitiveGuide, Container } from '../types/container';
-import { fetchKernelPrimitives } from '../api';
+import type { KernelPrimitiveGuide, Container } from '../../types/container.ts';
+import { fetchKernelPrimitives } from '../../api.ts';
 import { 
   Shield, 
   Code, 
@@ -16,14 +16,14 @@ import {
   Layers,
   ChevronDown
 } from 'lucide-vue-next';
-import DockerLogo from './common/DockerLogo.vue';
-import Namespace from './kernel/Namespace.vue';
-import OverlayFs from './kernel/OverlayFs.vue';
-import Lifecycle from './kernel/Lifecycle.vue';
-import SecurityBox from './kernel/SecurityBox.vue';
-import PacketTracer from './kernel/PacketTracer.vue';
-import ComposeTopo from './kernel/ComposeTopo.vue';
-import UnionFsStack from './kernel/UnionFsStack.vue';
+import DockerLogo from '../common/DockerLogo.vue';
+import Namespace from '../kernel/Namespace.vue';
+import OverlayFs from '../kernel/OverlayFs.vue';
+import Lifecycle from '../kernel/Lifecycle.vue';
+import SecurityBox from '../kernel/SecurityBox.vue';
+import PacketTracer from '../kernel/PacketTracer.vue';
+import ComposeTopo from '../kernel/ComposeTopo.vue';
+import UnionFsStack from '../kernel/UnionFsStack.vue';
 
 interface Props {
   containers?: Container[];
@@ -89,9 +89,9 @@ function copyCode(code: string) {
     <!-- Header with Right-Aligned Dropdown Switcher -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#21262d] pb-4">
       <div>
-        <h2 class="text-lg font-semibold text-slate-100 flex items-center gap-2">
-          <span>Under The Hood</span>
-          <span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-mono border border-blue-500/20">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2 font-sans">
+          <span>Kernel</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-[#1E2633] text-blue-400 border border-[#2B3545] font-mono">
             Visualizer Suite
           </span>
         </h2>

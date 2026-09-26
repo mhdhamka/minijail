@@ -6,8 +6,8 @@ import {
   Layers, 
   Layers3
 } from 'lucide-vue-next';
-import OverlayFs from './kernel/OverlayFs.vue';
-import UnionFsStack from './kernel/UnionFsStack.vue';
+import OverlayFs from '../kernel/OverlayFs.vue';
+import UnionFsStack from '../kernel/UnionFsStack.vue';
 
 interface VolumeItem {
   name: string;

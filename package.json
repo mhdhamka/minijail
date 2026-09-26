@@ -1,5 +1,5 @@
 {
-  "name": "minijail-container",
+  "name": "minijail-go",
   "private": true,
   "version": "1.0.0",
   "type": "module",

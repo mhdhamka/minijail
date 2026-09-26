@@ -49,11 +49,11 @@ const emit = defineEmits<{
             <div class="flex items-center gap-1.5">
               <span class="font-bold text-slate-100 tracking-tight text-sm">Docker</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-semibold border border-blue-500/20">
-                Desktop
+                Simulation
               </span>
             </div>
             <div class="text-[11px] text-slate-400 font-mono mt-0.5 flex items-center gap-1">
-              <span>Minijail-Go</span>
+              <span>Minijail-Go Engine</span>
             </div>
           </div>
         </div>
@@ -141,7 +141,7 @@ const emit = defineEmits<{
         >
           <div class="flex items-center gap-2.5">
             <FolderTree class="w-4 h-4 transition-transform group-hover:scale-110" :class="activeTab === 'volumes' ? 'text-white' : 'text-slate-400'" />
-            <span>Volumes & Mounts</span>
+            <span>Volumes</span>
           </div>
           <span 
             class="text-[10px] px-1.5 py-0.5 rounded font-mono transition-colors"
@@ -183,7 +183,7 @@ const emit = defineEmits<{
         >
           <div class="flex items-center gap-2.5">
             <Activity class="w-4 h-4 transition-transform group-hover:scale-110 text-cyan-400" />
-            <span>Resource Monitor</span>
+            <span>Resources</span>
           </div>
           <span 
             class="text-[10px] px-1.5 py-0.5 rounded font-mono transition-colors"

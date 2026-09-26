@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { Container } from '../types/container';
-import { stressMemory, stressCpu } from '../api';
+import type { Container } from '../../types/container';
+import { stressMemory, stressCpu } from '../../api';
 import { 
   X, 
   Activity, 
@@ -12,7 +12,6 @@ import {
   Flame, 
   AlertTriangle,
   FileCode,
-  Layers
 } from 'lucide-vue-next';
 
 interface Props {

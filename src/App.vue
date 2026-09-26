@@ -14,20 +14,19 @@ import {
 
 import Sidebar, { type ActiveTab } from './components/common/Sidebar.vue';
 import Header from './components/common/Header.vue';
-import ContainersTable from './components/ContainersTable.vue';
-import ContainerCard from './components/ContainerCard.vue';
-import ContainerDrawer from './components/ContainerDrawer.vue';
-import ContainerSpawnerModal from './components/ContainerSpawnerModal.vue';
-import DockerCliModal from './components/DockerCliModal.vue';
-import KernelPrimitivesModal from './components/KernelPrimitivesModal.vue';
-import Images from './components/Images.vue';
-import Volumes from './components/Volumes.vue';
-import KernelInternalsView from './components/KernelInternalsView.vue';
-import ContainerWorkbench from './components/ContainerWorkbench.vue';
-import CgroupsMonitorView from './components/CgroupsMonitorView.vue';
+import Table from './components/container/Table.vue';
+import Card from './components/container/Card.vue';
+import Drawer from './components/container/Drawer.vue';
+import SpawnModal from './components/container/SpawnModal.vue';
+import CLI from './components/modal/CLI.vue';
+import KernelPrimitives from './components/modal/KernelPrimitives.vue';
+import Images from './components/view/Images.vue';
+import Volumes from './components/view/Volumes.vue';
+import Kernel from './components/view/Kernel.vue';
+import Workbench from './components/view/Workbench.vue';
+import Resources from './components/view/Resources.vue';
 
 import { 
-  Search, 
   Plus, 
   Play, 
   Square, 
@@ -278,7 +277,7 @@ useTheme();
 
       <main class="flex-1 p-5 sm:p-7 space-y-6 max-w-7xl w-full mx-auto">
         <!-- 0. WORKBENCH -->
-        <ContainerWorkbench 
+        <Workbench 
           v-if="activeTab === 'workbench'"
           :initial-containers="containers"
           @refresh="loadContainers"
@@ -419,7 +418,7 @@ useTheme();
           </div>
 
           <!-- Table View -->
-          <ContainersTable 
+          <Table 
             v-if="viewMode === 'table'"
             :containers="filteredContainers"
             :selected-ids="selectedIds"
@@ -436,7 +435,7 @@ useTheme();
 
           <!-- Grid / Cards View -->
           <div v-else-if="filteredContainers.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <ContainerCard 
+            <Card 
               v-for="container in filteredContainers"
               :key="container.id"
               :container="container"
@@ -483,13 +482,13 @@ useTheme();
         />
 
         <!-- 4. KERNEL INTERNALS VIEW -->
-        <KernelInternalsView 
+        <Kernel 
           v-else-if="activeTab === 'kernel'"
           :containers="containers"
         />
 
         <!-- 5. CGROUPS MONITOR VIEW -->
-        <CgroupsMonitorView 
+        <Resources 
           v-else-if="activeTab === 'metrics'"
           :containers="containers"
           @refresh="loadContainers"
@@ -498,7 +497,7 @@ useTheme();
     </div>
 
     <!-- Modals & Drawers -->
-    <ContainerDrawer 
+    <Drawer 
       v-if="activeDrawerContainer"
       :container="activeDrawerContainer"
       :initial-tab="activeDrawerTab"
@@ -506,20 +505,20 @@ useTheme();
       @refresh="loadContainers"
     />
 
-    <ContainerSpawnerModal 
+    <SpawnModal 
       v-if="showSpawner"
       :initial-image="spawnerImage"
       @close="showSpawner = false"
       @deploy="handleDeploy"
     />
 
-    <DockerCliModal 
+    <CLI 
       v-if="showCli"
       @close="showCli = false"
       @refresh="loadContainers"
     />
 
-    <KernelPrimitivesModal 
+    <KernelPrimitives 
       v-if="showPrimitivesModal"
       @close="showPrimitivesModal = false"
     />

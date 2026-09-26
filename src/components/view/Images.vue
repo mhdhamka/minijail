@@ -4,14 +4,6 @@ import {
   Package, 
   Play, 
   Search, 
-  Trash2, 
-  ExternalLink, 
-  Download, 
-  Check, 
-  Layers, 
-  Info,
-  Clock,
-  HardDrive
 } from 'lucide-vue-next';
 
 interface ImageItem {

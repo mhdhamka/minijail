@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue';
-import type { Container } from '../types/container';
+import type { Container } from '../../types/container';
 import { 
   execCommand, 
   stressMemory, 
@@ -10,7 +10,7 @@ import {
   pauseContainer, 
   unpauseContainer, 
   killContainer 
-} from '../api';
+} from '../../api';
 import { 
   X, 
   Play, 

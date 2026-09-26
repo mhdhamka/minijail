@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
-import type { Container, MetricPoint } from '../types/container';
-import { stressCpu, stressMemory, startContainer, updateCgroupLimits } from '../api';
+import type { Container, MetricPoint } from '../../types/container';
+import { stressCpu, stressMemory, startContainer, updateCgroupLimits } from '../../api';
 import { 
   Cpu, 
   HardDrive, 
@@ -14,7 +14,6 @@ import {
   FileCode2, 
   Info,
   Download,
-  Activity
 } from 'lucide-vue-next';
 
 interface Props {

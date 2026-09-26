@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import type { KernelPrimitiveGuide } from '../types/container';
-import { fetchKernelPrimitives } from '../api';
+import type { KernelPrimitiveGuide } from '../../types/container';
+import { fetchKernelPrimitives } from '../../api';
 import { X, Layers, Code, Shield, Check, Copy } from 'lucide-vue-next';
 
 const emit = defineEmits<{
