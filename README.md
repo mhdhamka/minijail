@@ -8,10 +8,6 @@
 [![Golang](https://img.shields.io/badge/Runtime-Golang%20Engine-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-<p align="center">
-  <b>An authentic Docker Desktop simulator bridging low-level Linux kernel primitives—Namespaces, Cgroups v2, and OverlayFS Copy-on-Write—with a fully functional Golang container engine and rich interactive dashboard.</b>
-</p>
-
 [Overview](#overview) · [Key Features](#key-features) · [Architecture Animation](#architecture-animation) · [Tech Stack](#tech-stack--architecture) · [Getting Started](#getting-started) · [Under The Hood](#how-it-works-under-the-hood)
 
 </div>
@@ -20,9 +16,9 @@
 
 ## Overview
 
-**Minijail** is an interactive, browser-based container runtime engine and educational playground designed to demystify how containerization works under the hood. While tools like Docker abstract away system complexity behind a single command, Minijail opens up the black box. 
+**Minijail-Go** is an interactive, browser-based container runtime engine and educational playground designed to demystify how containerization works under the hood. While tools like Docker abstract away system complexity behind a single command, Minijail-Go opens up the black box. 
 
-It pairs a high-performance **Golang runtime backend**—which simulates real Linux kernel primitives like namespaces (`PID`, `UTS`, `NET`, `MNT`), hierarchical resource limits (`cgroups v2`), and Copy-on-Write layers (`OverlayFS`)—with a sleek, production-grade **Vue 3 Docker Desktop interface**. Whether you want to monitor live CPU/memory metrics, trigger simulated kernel OOM (Out-Of-Memory) kills, or inspect isolated mount filesystems, Minijail gives you full runtime visibility.
+It pairs a high-performance **Golang runtime backend** which simulates real Linux kernel primitives like namespaces (`PID`, `UTS`, `NET`, `MNT`), hierarchical resource limits (`cgroups v2`), and Copy-on-Write layers (`OverlayFS`)—with a sleek, production-grade **Vue 3 Docker Desktop interface**. Whether you want to monitor live CPU/memory metrics, trigger simulated kernel OOM (Out-Of-Memory) kills, or inspect isolated mount filesystems, Minijail gives you full runtime visibility.
 
 ---
 
