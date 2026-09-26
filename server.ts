@@ -1314,11 +1314,11 @@ async function startServer() {
   // Must run on port 3000 in AI Studio environment
   const PORT = 3000;
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[Minijail] Container Simulator running at http://localhost:${PORT}`);
+    console.log(`[Minijail-Go] Container Simulator running at http://localhost:${PORT}`);
   });
 }
 
 startServer().catch((err) => {
-  console.error('[Minijail] Server startup error:', err);
+  console.error('[Minijail-Go] Server startup error:', err);
   process.exit(1);
 });
