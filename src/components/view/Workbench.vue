@@ -18,14 +18,12 @@ import {
   Play, 
   Square, 
   Pause, 
-  RotateCw, 
   Trash2, 
   Box, 
   Sliders, 
   Cpu, 
   HardDrive, 
   Send, 
-  RefreshCw, 
   Search, 
   FileText, 
   Info, 
@@ -34,6 +32,7 @@ import {
   Shield,
   Layers,
   Zap,
+  Activity
 } from 'lucide-vue-next';
 import DockerLogo from '../common/DockerLogo.vue';
 
@@ -622,12 +621,12 @@ const totalMemoryMB = computed(() => {
     <!-- Top Summary Banner -->
     <div class="bg-[#161B22] border border-[#232A35] rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 shadow-md">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#1D63ED]/20 text-[#0db7ed] flex items-center justify-center border border-[#1D63ED]/30 shrink-0">
+        <div class="w-10 h-10 rounded-xl bg-[#1D63ED]/20 text-[#0db7ed] flex items-center justify-center border border-[#1D63ED]/30 shrink-0 shadow-inner">
           <DockerLogo :size="28" />
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-base font-bold text-white font-sans">Container Operations Workbench</h1>
+            <h1 class="text-base font-bold text-white font-sans tracking-tight">Container Operations Workbench</h1>
             <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#1D63ED]/20 text-[#0db7ed] border border-[#1D63ED]/30 font-mono font-semibold">
               Split Terminal & Control Panel
             </span>
@@ -639,20 +638,20 @@ const totalMemoryMB = computed(() => {
       </div>
 
       <!-- Quick Metrics Header -->
-      <div class="flex items-center gap-3 text-xs font-mono">
-        <div class="px-3 py-1.5 rounded-lg bg-[#0E1217] border border-[#232A35] flex items-center gap-2">
+      <div class="flex items-center gap-2.5 text-xs font-mono flex-wrap">
+        <div class="px-3 py-1.5 rounded-lg bg-[#0E1217] border border-[#232A35] flex items-center gap-2 shadow-sm">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span class="text-slate-400">Running:</span>
           <span class="text-emerald-400 font-bold">{{ runningCount }}/{{ containers.length }}</span>
         </div>
-        <div class="px-3 py-1.5 rounded-lg bg-[#0E1217] border border-[#232A35] flex items-center gap-2">
+        <div class="px-3 py-1.5 rounded-lg bg-[#0E1217] border border-[#232A35] flex items-center gap-2 shadow-sm">
           <HardDrive class="w-3.5 h-3.5 text-cyan-400" />
           <span class="text-slate-400">Mem Limit:</span>
           <span class="text-cyan-300 font-bold">{{ totalMemoryMB }} MB</span>
         </div>
         <button 
           @click="emit('open-metrics')"
-          class="px-2.5 py-1.5 rounded-lg bg-[#142339] hover:bg-[#1B3050] text-cyan-300 border border-cyan-800/60 flex items-center gap-1.5 transition-colors cursor-pointer text-xs font-mono font-medium"
+          class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#142339] to-[#1B3050] hover:from-[#1B3050] hover:to-[#223B65] text-cyan-300 border border-cyan-800/60 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer text-xs font-mono font-medium"
           title="Open Real-Time Cgroups & Resource Monitor"
         >
           <Activity class="w-3.5 h-3.5 text-cyan-400" />
@@ -660,19 +659,11 @@ const totalMemoryMB = computed(() => {
         </button>
         <button 
           @click="emit('open-kernel')"
-          class="px-2.5 py-1.5 rounded-lg bg-[#1D1B28] hover:bg-[#2A263D] text-indigo-300 border border-indigo-800/60 flex items-center gap-1.5 transition-colors cursor-pointer text-xs font-mono font-medium"
+          class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#1D1B28] to-[#262238] hover:from-[#262238] hover:to-[#312B48] text-indigo-300 border border-indigo-800/60 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer text-xs font-mono font-medium"
           title="Open Interactive Linux Namespaces Isolation Diagram"
         >
           <Layers class="w-3.5 h-3.5 text-indigo-400" />
           <span>Namespaces</span>
-        </button>
-        <button 
-          @click="loadContainerList"
-          :disabled="loadingList"
-          class="p-2 rounded-lg bg-[#1A222D] hover:bg-[#243040] text-slate-300 hover:text-white border border-[#2D3848] transition-colors cursor-pointer"
-          title="Refresh Container States"
-        >
-          <RefreshCw class="w-3.5 h-3.5" :class="{ 'animate-spin': loadingList }" />
         </button>
       </div>
     </div>
@@ -689,9 +680,9 @@ const totalMemoryMB = computed(() => {
           <div class="flex items-center gap-2.5">
             <!-- macOS / Linux dots -->
             <div class="flex items-center gap-1.5">
-              <div class="w-3 h-3 rounded-full bg-[#E05252] border border-black/30"></div>
-              <div class="w-3 h-3 rounded-full bg-[#E6A23C] border border-black/30"></div>
-              <div class="w-3 h-3 rounded-full bg-[#3FB950] border border-black/30"></div>
+              <div class="w-3 h-3 rounded-full bg-[#E05252] border border-black/30 shadow-sm"></div>
+              <div class="w-3 h-3 rounded-full bg-[#E6A23C] border border-black/30 shadow-sm"></div>
+              <div class="w-3 h-3 rounded-full bg-[#3FB950] border border-black/30 shadow-sm"></div>
             </div>
             <div class="text-xs font-mono text-slate-300 flex items-center gap-2 font-semibold ml-1">
               <Terminal class="w-3.5 h-3.5 text-[#0db7ed]" />
@@ -704,7 +695,7 @@ const totalMemoryMB = computed(() => {
           <div class="flex items-center gap-1.5 text-xs font-mono">
             <button 
               @click="copyTerminalLogs"
-              class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-400 hover:text-slate-200 border border-[#2B3545] transition-colors flex items-center gap-1 text-[11px] cursor-pointer"
+              class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-400 hover:text-slate-200 border border-[#2B3545] transition-colors flex items-center gap-1 text-[11px] cursor-pointer shadow-sm"
               title="Copy all terminal output"
             >
               <Check v-if="copiedOutput" class="w-3 h-3 text-emerald-400" />
@@ -713,16 +704,16 @@ const totalMemoryMB = computed(() => {
             </button>
             <button 
               @click="terminalEntries = []"
-              class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-400 hover:text-rose-400 border border-[#2B3545] transition-colors text-[11px] cursor-pointer"
+              class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-400 hover:text-rose-400 border border-[#2B3545] transition-colors text-[11px] cursor-pointer shadow-sm"
               title="Clear terminal buffer"
             >
               Clear
             </button>
             <button 
               @click="autoScroll = !autoScroll"
-              class="px-2 py-1 rounded border transition-colors text-[11px] cursor-pointer"
+              class="px-2 py-1 rounded border transition-colors text-[11px] cursor-pointer shadow-sm"
               :class="autoScroll 
-                ? 'bg-[#1D63ED]/20 text-[#0db7ed] border-[#1D63ED]/40' 
+                ? 'bg-[#1D63ED]/20 text-[#0db7ed] border-[#1D63ED]/40 font-semibold' 
                 : 'bg-[#161B22] text-slate-500 border-[#2B3545]'"
               title="Toggle auto-scroll on new output"
             >
@@ -732,37 +723,37 @@ const totalMemoryMB = computed(() => {
         </div>
 
         <!-- Terminal Quick Action Bar -->
-        <div class="px-3 py-1.5 bg-[#0E1217] border-b border-[#232A35] flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono shrink-0">
-          <span class="text-slate-500 text-[10px] font-sans flex items-center gap-1 shrink-0">
+        <div class="px-3 py-2 bg-[#0E1217] border-b border-[#232A35] flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono shrink-0 scrollbar-none">
+          <span class="text-slate-500 text-[10px] font-sans flex items-center gap-1 shrink-0 font-medium">
             Quick CLI:
           </span>
           <button 
             @click="executeTerminalCommand('docker ps -a')"
-            class="px-2 py-0.5 rounded bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer"
+            class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer shadow-sm"
           >
             docker ps -a
           </button>
           <button 
             @click="executeTerminalCommand('docker stats')"
-            class="px-2 py-0.5 rounded bg-[#161B22] hover:bg-[#202836] text-cyan-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer"
+            class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-cyan-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer shadow-sm"
           >
             docker stats
           </button>
           <button 
             @click="executeTerminalCommand('docker images')"
-            class="px-2 py-0.5 rounded bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer"
+            class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer shadow-sm"
           >
             docker images
           </button>
           <button 
             @click="executeTerminalCommand('docker version')"
-            class="px-2 py-0.5 rounded bg-[#161B22] hover:bg-[#202836] text-indigo-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer"
+            class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-indigo-300 border border-[#2B3545] transition-colors shrink-0 cursor-pointer shadow-sm"
           >
             docker version
           </button>
           <button 
             @click="executeTerminalCommand('docker --help')"
-            class="px-2 py-0.5 rounded bg-[#161B22] hover:bg-[#202836] text-slate-400 border border-[#2B3545] transition-colors shrink-0 cursor-pointer"
+            class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-400 border border-[#2B3545] transition-colors shrink-0 cursor-pointer shadow-sm"
           >
             --help
           </button>
@@ -771,9 +762,9 @@ const totalMemoryMB = computed(() => {
         <!-- Terminal Output Stream Body -->
         <div 
           ref="terminalBody"
-          class="flex-1 p-4 overflow-y-auto font-mono text-xs space-y-3.5 selection:bg-[#1D63ED]/30 text-slate-200 leading-relaxed"
+          class="flex-1 p-4 overflow-y-auto font-mono text-xs space-y-4 selection:bg-[#1D63ED]/30 text-slate-200 leading-relaxed scrollbar-thin scrollbar-thumb-slate-800"
         >
-          <div v-for="item in terminalEntries" :key="item.id" class="space-y-1">
+          <div v-for="item in terminalEntries" :key="item.id" class="space-y-1.5">
             <!-- Command line line -->
             <div class="flex items-center gap-2 text-slate-400">
               <span class="text-slate-600 text-[10px] select-none">[{{ item.time }}]</span>
@@ -781,7 +772,7 @@ const totalMemoryMB = computed(() => {
               <span class="text-white font-semibold">{{ item.command }}</span>
               <span 
                 v-if="item.source === 'panel'"
-                class="text-[9px] px-1 py-0.2 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/60 ml-auto select-none"
+                class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 ml-auto select-none font-medium"
               >
                 Panel Action
               </span>
@@ -790,39 +781,39 @@ const totalMemoryMB = computed(() => {
             <!-- Output Block -->
             <div 
               v-if="item.output" 
-              class="bg-[#11161D] p-3 rounded-lg border border-[#232A35] text-slate-200 whitespace-pre font-mono text-[11px] overflow-x-auto"
+              class="bg-[#11161D] p-3.5 rounded-xl border border-[#232A35] text-slate-200 whitespace-pre font-mono text-[11px] overflow-x-auto shadow-inner"
             >{{ item.output }}</div>
 
             <!-- Error Block -->
             <div 
               v-if="item.error" 
-              class="bg-rose-950/40 p-2.5 rounded-lg border border-rose-800/60 text-rose-300 whitespace-pre-wrap font-mono text-[11px]"
+              class="bg-rose-950/40 p-3 rounded-xl border border-rose-800/60 text-rose-300 whitespace-pre-wrap font-mono text-[11px] shadow-inner"
             >Error: {{ item.error }}</div>
           </div>
 
           <!-- Loading state -->
-          <div v-if="isExecutingCli" class="flex items-center gap-2 text-[#0db7ed] pt-2 text-[11px]">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#0db7ed] animate-ping"></span>
+          <div v-if="isExecutingCli" class="flex items-center gap-2 text-[#0db7ed] pt-2 text-[11px] font-medium">
+            <span class="w-2 h-2 rounded-full bg-[#0db7ed] animate-ping"></span>
             <span>Minijail engine evaluating system call...</span>
           </div>
         </div>
 
         <!-- Terminal Interactive Input -->
         <div class="p-3 bg-[#11161D] border-t border-[#232A35] shrink-0">
-          <form @submit.prevent="executeTerminalCommand()" class="flex items-center gap-2 font-mono text-xs">
+          <form @submit.prevent="executeTerminalCommand()" class="flex items-center gap-2.5 font-mono text-xs bg-[#0E1217] px-3 py-2 rounded-xl border border-[#232A35] focus-within:border-[#1D63ED] transition-colors">
             <span class="text-[#0db7ed] font-bold text-sm shrink-0 select-none">$</span>
             <input 
               v-model="commandInput"
               @keydown="handleTerminalKeyDown"
               type="text" 
-              placeholder="Type docker command (e.g. docker ps, docker run -d --name app alpine:3.19 sh)..."
+              placeholder="Type docker command (e.g. docker ps, docker run...)"
               class="flex-1 bg-transparent text-slate-100 placeholder:text-slate-600 focus:outline-none text-xs"
               :disabled="isExecutingCli"
             />
             <button 
               type="submit" 
               :disabled="isExecutingCli || !commandInput.trim()"
-              class="px-3.5 py-1.5 rounded-lg bg-[#1D63ED] hover:bg-[#1A57D0] disabled:opacity-30 text-white font-medium flex items-center gap-1 transition-colors cursor-pointer text-xs"
+              class="px-3.5 py-1.5 rounded-lg bg-[#1D63ED] hover:bg-[#1A57D0] disabled:opacity-30 text-white font-medium flex items-center gap-1 transition-all shadow-sm cursor-pointer text-xs"
             >
               <Send class="w-3.5 h-3.5" />
               <span>Execute</span>
@@ -843,26 +834,26 @@ const totalMemoryMB = computed(() => {
           </div>
 
           <!-- Section Switcher Tabs -->
-          <div class="flex items-center bg-[#0E1217] p-1 rounded-lg border border-[#232A35] text-xs font-mono">
+          <div class="flex items-center bg-[#0E1217] p-1 rounded-lg border border-[#232A35] text-xs font-mono shadow-inner">
             <button
               @click="activeTabRight = 'list'"
-              class="px-3 py-1 rounded-md transition-colors cursor-pointer"
-              :class="activeTabRight === 'list' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-slate-200'"
+              class="px-3.5 py-1.5 rounded-md transition-all cursor-pointer"
+              :class="activeTabRight === 'list' ? 'bg-[#1D63ED] text-white font-semibold shadow-sm' : 'text-slate-400 hover:text-slate-200'"
             >
               List & Manage ({{ containers.length }})
             </button>
             <button
               @click="activeTabRight = 'run'"
-              class="px-3 py-1 rounded-md transition-colors cursor-pointer flex items-center gap-1"
-              :class="activeTabRight === 'run' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-slate-200'"
+              class="px-3.5 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5"
+              :class="activeTabRight === 'run' ? 'bg-[#1D63ED] text-white font-semibold shadow-sm' : 'text-slate-400 hover:text-slate-200'"
             >
-              <Play class="w-3 h-3" />
+              <Play class="w-3 h-3 fill-current" />
               <span>Run New</span>
             </button>
             <button
               @click="activeTabRight = 'bulk'"
-              class="px-3 py-1 rounded-md transition-colors cursor-pointer"
-              :class="activeTabRight === 'bulk' ? 'bg-[#1D63ED] text-white font-semibold' : 'text-slate-400 hover:text-slate-200'"
+              class="px-3.5 py-1.5 rounded-md transition-all cursor-pointer"
+              :class="activeTabRight === 'bulk' ? 'bg-[#1D63ED] text-white font-semibold shadow-sm' : 'text-slate-400 hover:text-slate-200'"
             >
               Bulk & Ops
             </button>
@@ -874,22 +865,22 @@ const totalMemoryMB = computed(() => {
         <!-- -------------------------------------------------------- -->
         <div v-if="activeTabRight === 'list'" class="flex-1 flex flex-col overflow-hidden">
           <!-- Search & Filter Ribbon -->
-          <div class="p-3 bg-[#0E1217] border-b border-[#232A35] flex items-center gap-2 shrink-0">
+          <div class="p-3 bg-[#0E1217] border-b border-[#232A35] flex items-center gap-2.5 shrink-0">
             <!-- Search -->
             <div class="relative flex-1">
-              <Search class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <Search class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input 
                 v-model="searchQuery"
                 type="text" 
                 placeholder="Filter by name, ID, or image..."
-                class="w-full pl-8 pr-3 py-1.5 rounded-lg bg-[#161B22] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED]"
+                class="w-full pl-9 pr-3 py-2 rounded-xl bg-[#161B22] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED] shadow-inner transition-colors"
               />
             </div>
 
             <!-- Status Filter Dropdown -->
             <select 
               v-model="listFilter"
-              class="px-2.5 py-1.5 rounded-lg bg-[#161B22] border border-[#2B3545] text-slate-200 text-xs focus:outline-none focus:border-[#1D63ED] font-mono cursor-pointer"
+              class="px-3 py-2 rounded-xl bg-[#161B22] border border-[#2B3545] text-slate-200 text-xs focus:outline-none focus:border-[#1D63ED] font-mono cursor-pointer shadow-sm"
             >
               <option value="all">All States ({{ containers.length }})</option>
               <option value="running">Running ({{ containers.filter(c => c.status === 'running').length }})</option>
@@ -900,23 +891,23 @@ const totalMemoryMB = computed(() => {
           </div>
 
           <!-- Containers List Scrollable -->
-          <div class="flex-1 overflow-y-auto p-4 space-y-3">
+          <div class="flex-1 overflow-y-auto p-4 space-y-3.5 scrollbar-thin scrollbar-thumb-slate-800">
             <div 
               v-for="c in filteredContainers" 
               :key="c.id"
-              class="p-3.5 rounded-xl border transition-all font-mono text-xs"
+              class="p-4 rounded-xl border transition-all font-mono text-xs shadow-md"
               :class="focusedContainerId === c.id 
-                ? 'bg-[#1D63ED]/10 border-[#1D63ED] shadow-md' 
+                ? 'bg-[#1D63ED]/10 border-[#1D63ED] shadow-lg ring-1 ring-[#1D63ED]/40' 
                 : 'bg-[#11161D] border-[#232A35] hover:border-[#2D3848]'"
             >
               <!-- Container Card Header -->
-              <div class="flex items-start justify-between gap-2">
-                <div class="space-y-0.5">
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-white text-sm font-sans">{{ c.name }}</span>
+              <div class="flex items-start justify-between gap-3">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2.5">
+                    <span class="font-bold text-white text-sm font-sans tracking-wide">{{ c.name }}</span>
                     <!-- Status Badge -->
                     <span 
-                      class="text-[10px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1.5"
+                      class="text-[10px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1.5 shadow-sm"
                       :class="{
                         'bg-emerald-950/80 text-emerald-400 border border-emerald-800/80': c.status === 'running',
                         'bg-amber-950/80 text-amber-400 border border-amber-800/80': c.status === 'paused',
@@ -947,7 +938,7 @@ const totalMemoryMB = computed(() => {
                 </div>
 
                 <!-- Resource Metrics Gauge -->
-                <div class="text-right text-[11px] space-y-0.5 shrink-0">
+                <div class="text-right text-[11px] space-y-0.5 shrink-0 bg-[#0E1217] px-2.5 py-1.5 rounded-lg border border-[#232A35]">
                   <div class="text-slate-300">
                     <span class="text-slate-500">Mem:</span> 
                     <span class="text-cyan-300 font-bold ml-1">
@@ -964,14 +955,14 @@ const totalMemoryMB = computed(() => {
               </div>
 
               <!-- Action Bar for this container -->
-              <div class="mt-3 pt-2.5 border-t border-[#232A35] flex items-center justify-between flex-wrap gap-1.5">
+              <div class="mt-3.5 pt-3 border-t border-[#232A35] flex items-center justify-between flex-wrap gap-2">
                 <!-- Left: State Transitions -->
                 <div class="flex items-center gap-1.5">
                   <!-- Start -->
                   <button 
                     v-if="c.status === 'stopped' || c.status === 'oom_killed'"
                     @click="handleControlPanelStart(c)"
-                    class="px-2.5 py-1 rounded bg-emerald-950/70 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 transition-colors flex items-center gap-1 text-[11px] font-semibold cursor-pointer"
+                    class="px-3 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 transition-all flex items-center gap-1 text-[11px] font-semibold cursor-pointer shadow-sm"
                     title="docker start"
                   >
                     <Play class="w-3 h-3 fill-current" />
@@ -982,7 +973,7 @@ const totalMemoryMB = computed(() => {
                   <button 
                     v-if="c.status === 'running' || c.status === 'paused'"
                     @click="handleControlPanelStop(c)"
-                    class="px-2.5 py-1 rounded bg-[#1E2633] hover:bg-[#2B3545] text-slate-200 border border-[#3B4758] transition-colors flex items-center gap-1 text-[11px] font-semibold cursor-pointer"
+                    class="px-3 py-1.5 rounded-lg bg-[#1E2633] hover:bg-[#2B3545] text-slate-200 border border-[#3B4758] transition-all flex items-center gap-1 text-[11px] font-semibold cursor-pointer shadow-sm"
                     title="docker stop"
                   >
                     <Square class="w-3 h-3 fill-current" />
@@ -993,7 +984,7 @@ const totalMemoryMB = computed(() => {
                   <button 
                     v-if="c.status === 'running' || c.status === 'paused'"
                     @click="handleControlPanelTogglePause(c)"
-                    class="px-2.5 py-1 rounded bg-amber-950/70 hover:bg-amber-900 text-amber-300 border border-amber-800 transition-colors flex items-center gap-1 text-[11px] cursor-pointer"
+                    class="px-3 py-1.5 rounded-lg bg-amber-950/70 hover:bg-amber-900 text-amber-300 border border-amber-800 transition-all flex items-center gap-1 text-[11px] font-semibold cursor-pointer shadow-sm"
                     :title="c.status === 'paused' ? 'docker unpause' : 'docker pause'"
                   >
                     <Pause class="w-3 h-3" />
@@ -1004,7 +995,7 @@ const totalMemoryMB = computed(() => {
                   <button 
                     v-if="c.status === 'running' || c.status === 'paused'"
                     @click="handleControlPanelKill(c)"
-                    class="px-2 py-1 rounded bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800/80 transition-colors flex items-center gap-1 text-[11px] cursor-pointer"
+                    class="px-3 py-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800/80 transition-all flex items-center gap-1 text-[11px] font-semibold cursor-pointer shadow-sm"
                     title="docker kill (SIGKILL)"
                   >
                     <Zap class="w-3 h-3" />
@@ -1018,16 +1009,16 @@ const totalMemoryMB = computed(() => {
                   <button 
                     v-if="c.status === 'running'"
                     @click="handleControlPanelStressOOM(c)"
-                    class="px-2 py-1 rounded bg-purple-950/60 hover:bg-purple-900 text-purple-300 border border-purple-800/70 transition-colors text-[10px] cursor-pointer"
+                    class="px-2.5 py-1.5 rounded-lg bg-purple-950/60 hover:bg-purple-900 text-purple-300 border border-purple-800/70 transition-all text-[10px] font-medium cursor-pointer shadow-sm"
                     title="Simulate memory pressure to trigger Linux OOM-killer"
                   >
-                    +24M (OOM Stress)
+                    +24M OOM
                   </button>
 
                   <!-- Logs -->
                   <button 
                     @click="handleControlPanelLogs(c)"
-                    class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-300 hover:text-white border border-[#2B3545] transition-colors flex items-center gap-1 text-[10px] cursor-pointer"
+                    class="px-2.5 py-1.5 rounded-lg bg-[#161B22] hover:bg-[#202836] text-slate-300 hover:text-white border border-[#2B3545] transition-all flex items-center gap-1 text-[10px] cursor-pointer shadow-sm"
                     title="Output logs into left terminal"
                   >
                     <FileText class="w-3 h-3" />
@@ -1037,7 +1028,7 @@ const totalMemoryMB = computed(() => {
                   <!-- Inspect -->
                   <button 
                     @click="handleControlPanelInspect(c)"
-                    class="px-2 py-1 rounded bg-[#161B22] hover:bg-[#202836] text-slate-300 hover:text-white border border-[#2B3545] transition-colors flex items-center gap-1 text-[10px] cursor-pointer"
+                    class="px-2.5 py-1.5 rounded-lg bg-[#161B22] hover:bg-[#202836] text-slate-300 hover:text-white border border-[#2B3545] transition-all flex items-center gap-1 text-[10px] cursor-pointer shadow-sm"
                     title="Output inspect JSON into left terminal"
                   >
                     <Info class="w-3 h-3" />
@@ -1047,7 +1038,7 @@ const totalMemoryMB = computed(() => {
                   <!-- Delete -->
                   <button 
                     @click="handleControlPanelDelete(c)"
-                    class="p-1 rounded bg-[#161B22] hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-[#2B3545] hover:border-rose-800 transition-colors cursor-pointer"
+                    class="p-1.5 rounded-lg bg-[#161B22] hover:bg-rose-950 text-slate-400 hover:text-rose-400 border border-[#2B3545] hover:border-rose-800 transition-all cursor-pointer shadow-sm"
                     title="docker rm"
                   >
                     <Trash2 class="w-3.5 h-3.5" />
@@ -1057,12 +1048,12 @@ const totalMemoryMB = computed(() => {
             </div>
 
             <!-- Empty List State -->
-            <div v-if="filteredContainers.length === 0" class="text-center py-12 space-y-3">
-              <Box class="w-10 h-10 mx-auto text-slate-600" />
+            <div v-if="filteredContainers.length === 0" class="text-center py-16 space-y-3">
+              <Box class="w-12 h-12 mx-auto text-slate-600 stroke-[1.5]" />
               <p class="text-xs text-slate-400 font-sans">No containers match the current filter.</p>
               <button 
                 @click="activeTabRight = 'run'"
-                class="px-3.5 py-1.5 rounded-lg bg-[#1D63ED] hover:bg-[#1A57D0] text-white text-xs font-semibold cursor-pointer"
+                class="px-4 py-2 rounded-xl bg-[#1D63ED] hover:bg-[#1A57D0] text-white text-xs font-semibold cursor-pointer shadow-md transition-all"
               >
                 + Run a Container
               </button>
@@ -1073,57 +1064,57 @@ const totalMemoryMB = computed(() => {
         <!-- -------------------------------------------------------- -->
         <!-- TAB 2: RUN NEW CONTAINER (docker run form) -->
         <!-- -------------------------------------------------------- -->
-        <div v-else-if="activeTabRight === 'run'" class="flex-1 overflow-y-auto p-5 space-y-4 font-mono text-xs">
+        <div v-else-if="activeTabRight === 'run'" class="flex-1 overflow-y-auto p-5 space-y-4 font-mono text-xs scrollbar-thin scrollbar-thumb-slate-800">
           <!-- Quick Presets -->
-          <div class="p-3 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-2">
-            <span class="text-[11px] text-slate-400 flex items-center gap-1 font-semibold font-sans">
+          <div class="p-3.5 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-2.5 shadow-sm">
+            <span class="text-[11px] text-slate-300 flex items-center gap-1 font-semibold font-sans">
               One-Click Presets:
             </span>
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-2 gap-2.5">
               <button 
                 type="button" 
                 @click="applyPreset('web')"
-                class="px-2.5 py-1.5 rounded-lg bg-[#161B22] hover:bg-[#202836] text-cyan-300 border border-[#2B3545] text-left transition-colors cursor-pointer"
+                class="px-3 py-2 rounded-xl bg-[#161B22] hover:bg-[#202836] text-cyan-300 border border-[#2B3545] text-left transition-all cursor-pointer shadow-sm group"
               >
-                <div class="font-bold">Alpine Web</div>
-                <div class="text-[10px] text-slate-500">64MB • 0.5 CPU</div>
+                <div class="font-bold group-hover:text-white transition-colors">Alpine Web</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">64MB • 0.5 CPU</div>
               </button>
               <button 
                 type="button" 
                 @click="applyPreset('canary')"
-                class="px-2.5 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/60 text-left transition-colors cursor-pointer"
+                class="px-3 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-950/60 text-rose-300 border border-rose-800/60 text-left transition-all cursor-pointer shadow-sm group"
               >
-                <div class="font-bold">OOM Canary</div>
-                <div class="text-[10px] text-rose-400/80">32MB (Breach Demo)</div>
+                <div class="font-bold group-hover:text-rose-200 transition-colors">OOM Canary</div>
+                <div class="text-[10px] text-rose-400/80 mt-0.5">32MB (Breach Demo)</div>
               </button>
               <button 
                 type="button" 
                 @click="applyPreset('worker')"
-                class="px-2.5 py-1.5 rounded-lg bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] text-left transition-colors cursor-pointer"
+                class="px-3 py-2 rounded-xl bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] text-left transition-all cursor-pointer shadow-sm group"
               >
-                <div class="font-bold">Busybox Worker</div>
-                <div class="text-[10px] text-slate-500">128MB • 1.0 CPU</div>
+                <div class="font-bold group-hover:text-white transition-colors">Busybox Worker</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">128MB • 1.0 CPU</div>
               </button>
               <button 
                 type="button" 
                 @click="applyPreset('ubuntu')"
-                class="px-2.5 py-1.5 rounded-lg bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] text-left transition-colors cursor-pointer"
+                class="px-3 py-2 rounded-xl bg-[#161B22] hover:bg-[#202836] text-slate-300 border border-[#2B3545] text-left transition-all cursor-pointer shadow-sm group"
               >
-                <div class="font-bold">Ubuntu Service</div>
-                <div class="text-[10px] text-slate-500">256MB • 1.5 CPU</div>
+                <div class="font-bold group-hover:text-white transition-colors">Ubuntu Service</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">256MB • 1.5 CPU</div>
               </button>
             </div>
           </div>
 
           <!-- Name & Image -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <div class="flex items-center justify-between mb-1">
+              <div class="flex items-center justify-between mb-1.5">
                 <label class="text-slate-300 font-medium">Container Name</label>
                 <button 
                   type="button" 
                   @click="generateRandomName"
-                  class="text-[10px] text-[#0db7ed] hover:underline cursor-pointer"
+                  class="text-[10px] text-[#0db7ed] hover:underline cursor-pointer font-semibold"
                 >
                   Generate
                 </button>
@@ -1132,15 +1123,15 @@ const totalMemoryMB = computed(() => {
                 v-model="runName"
                 type="text" 
                 placeholder="e.g. web-gateway-01"
-                class="w-full px-3 py-2 rounded-lg bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED]"
+                class="w-full px-3.5 py-2 rounded-xl bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED] shadow-inner transition-colors"
               />
             </div>
 
             <div>
-              <label class="block text-slate-300 font-medium mb-1">Image Tag</label>
+              <label class="block text-slate-300 font-medium mb-1.5">Image Tag</label>
               <select 
                 v-model="runImage"
-                class="w-full px-3 py-2 rounded-lg bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED]"
+                class="w-full px-3.5 py-2 rounded-xl bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED] shadow-sm cursor-pointer"
               >
                 <option value="alpine:3.19">alpine:3.19 (7.38 MB)</option>
                 <option value="busybox:1.36">busybox:1.36 (4.26 MB)</option>
@@ -1152,23 +1143,23 @@ const totalMemoryMB = computed(() => {
 
           <!-- Command -->
           <div>
-            <label class="block text-slate-300 font-medium mb-1">Entrypoint / Command</label>
+            <label class="block text-slate-300 font-medium mb-1.5">Entrypoint / Command</label>
             <input 
               v-model="runCommand"
               type="text" 
               placeholder="sh -c 'echo Started; sleep 3600'"
-              class="w-full px-3 py-2 rounded-lg bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED]"
+              class="w-full px-3.5 py-2 rounded-xl bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED] shadow-inner transition-colors"
             />
           </div>
 
           <!-- Cgroups v2 Constraints -->
-          <div class="p-3.5 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-3">
+          <div class="p-4 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-3.5 shadow-sm">
             <div class="flex items-center justify-between">
               <span class="text-cyan-400 font-bold flex items-center gap-1.5">
                 <HardDrive class="w-3.5 h-3.5" />
                 <span>Memory Limit (memory.max)</span>
               </span>
-              <span class="text-white font-bold">{{ runMemoryMb }} MB</span>
+              <span class="text-white font-bold bg-[#161B22] px-2 py-0.5 rounded border border-[#2B3545]">{{ runMemoryMb }} MB</span>
             </div>
             <input 
               v-model.number="runMemoryMb"
@@ -1184,12 +1175,12 @@ const totalMemoryMB = computed(() => {
               <span>512 MB</span>
             </div>
 
-            <div class="flex items-center justify-between pt-2 border-t border-[#232A35]">
+            <div class="flex items-center justify-between pt-3 border-t border-[#232A35]">
               <span class="text-indigo-400 font-bold flex items-center gap-1.5">
                 <Cpu class="w-3.5 h-3.5" />
                 <span>CPU CFS Quota (cpu.max)</span>
               </span>
-              <span class="text-white font-bold">{{ runCpuCores.toFixed(2) }} Cores</span>
+              <span class="text-white font-bold bg-[#161B22] px-2 py-0.5 rounded border border-[#2B3545]">{{ runCpuCores.toFixed(2) }} Cores</span>
             </div>
             <input 
               v-model.number="runCpuCores"
@@ -1203,12 +1194,12 @@ const totalMemoryMB = computed(() => {
 
           <!-- Port Mapping -->
           <div>
-            <label class="block text-slate-300 font-medium mb-1">Port Mapping (-p)</label>
+            <label class="block text-slate-300 font-medium mb-1.5">Port Mapping (-p)</label>
             <input 
               v-model="runPort"
               type="text" 
               placeholder="8080:80/tcp"
-              class="w-full px-3 py-2 rounded-lg bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED]"
+              class="w-full px-3.5 py-2 rounded-xl bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED] shadow-inner transition-colors"
             />
           </div>
 
@@ -1217,7 +1208,7 @@ const totalMemoryMB = computed(() => {
             type="button" 
             @click="handleControlPanelRun"
             :disabled="runningCreate"
-            class="w-full py-2.5 rounded-xl bg-[#1D63ED] hover:bg-[#1A57D0] disabled:opacity-50 text-white font-bold flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer text-xs"
+            class="w-full py-3 rounded-xl bg-[#1D63ED] hover:bg-[#1A57D0] disabled:opacity-50 text-white font-bold flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer text-xs"
           >
             <Play class="w-4 h-4 fill-current" />
             <span>{{ runningCreate ? 'Deploying Container...' : 'Execute: docker run' }}</span>
@@ -1227,49 +1218,49 @@ const totalMemoryMB = computed(() => {
         <!-- -------------------------------------------------------- -->
         <!-- TAB 3: BULK & GLOBAL OPERATIONS -->
         <!-- -------------------------------------------------------- -->
-        <div v-else-if="activeTabRight === 'bulk'" class="flex-1 overflow-y-auto p-5 space-y-4 font-mono text-xs">
-          <div class="p-4 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-3">
-            <h3 class="text-white font-bold font-sans flex items-center gap-2">
+        <div v-else-if="activeTabRight === 'bulk'" class="flex-1 overflow-y-auto p-5 space-y-4 font-mono text-xs scrollbar-thin scrollbar-thumb-slate-800">
+          <div class="p-4 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-3 shadow-sm">
+            <h3 class="text-white font-bold font-sans flex items-center gap-2 text-sm">
               <Zap class="w-4 h-4 text-[#0db7ed]" />
               <span>Bulk Engine Orchestration</span>
             </h3>
-            <p class="text-slate-400 text-xs font-sans">
+            <p class="text-slate-400 text-xs font-sans leading-relaxed">
               Perform fleet-wide operations across all simulated Linux processes in Minijail.
             </p>
 
-            <div class="space-y-2 pt-2">
+            <div class="space-y-2.5 pt-2">
               <button 
                 type="button" 
                 @click="handleStopAll"
-                class="w-full p-2.5 rounded-lg bg-[#161B22] hover:bg-[#202836] border border-[#2B3545] text-slate-200 hover:text-white flex items-center justify-between transition-colors cursor-pointer"
+                class="w-full p-3 rounded-xl bg-[#161B22] hover:bg-[#202836] border border-[#2B3545] text-slate-200 hover:text-white flex items-center justify-between transition-all cursor-pointer shadow-sm group"
               >
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2.5">
                   <Square class="w-3.5 h-3.5 text-amber-400" />
-                  <span>Stop All Running Containers</span>
+                  <span class="font-semibold">Stop All Running Containers</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono">docker stop $(docker ps -q)</span>
+                <span class="text-[10px] text-slate-500 font-mono group-hover:text-slate-400">docker stop $(docker ps -q)</span>
               </button>
 
               <button 
                 type="button" 
                 @click="handleStartAll"
-                class="w-full p-2.5 rounded-lg bg-[#161B22] hover:bg-[#202836] border border-[#2B3545] text-slate-200 hover:text-white flex items-center justify-between transition-colors cursor-pointer"
+                class="w-full p-3 rounded-xl bg-[#161B22] hover:bg-[#202836] border border-[#2B3545] text-slate-200 hover:text-white flex items-center justify-between transition-all cursor-pointer shadow-sm group"
               >
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2.5">
                   <Play class="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Start All Stopped Containers</span>
+                  <span class="font-semibold">Start All Stopped Containers</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono">docker start ...</span>
+                <span class="text-[10px] text-slate-500 font-mono group-hover:text-slate-400">docker start ...</span>
               </button>
 
               <button 
                 type="button" 
                 @click="handlePruneContainers"
-                class="w-full p-2.5 rounded-lg bg-rose-950/30 hover:bg-rose-950/60 border border-rose-800/50 text-rose-200 flex items-center justify-between transition-colors cursor-pointer"
+                class="w-full p-3 rounded-xl bg-rose-950/30 hover:bg-rose-950/60 border border-rose-800/50 text-rose-200 flex items-center justify-between transition-all cursor-pointer shadow-sm group"
               >
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2.5">
                   <Trash2 class="w-3.5 h-3.5 text-rose-400" />
-                  <span>Prune Exited Containers</span>
+                  <span class="font-semibold">Prune Exited Containers</span>
                 </div>
                 <span class="text-[10px] text-rose-400/70 font-mono">docker container prune</span>
               </button>
@@ -1277,27 +1268,27 @@ const totalMemoryMB = computed(() => {
           </div>
 
           <!-- Kernel Primitives Quick Summary -->
-          <div class="p-4 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-2">
-            <h4 class="text-white font-bold font-sans flex items-center gap-2">
+          <div class="p-4 rounded-xl bg-[#0E1217] border border-[#232A35] space-y-3 shadow-sm">
+            <h4 class="text-white font-bold font-sans flex items-center gap-2 text-sm">
               <Shield class="w-4 h-4 text-emerald-400" />
               <span>Active Kernel Primitives</span>
             </h4>
-            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-400">
-              <div class="p-2 rounded bg-[#161B22] border border-[#2B3545]">
+            <div class="grid grid-cols-2 gap-2.5 text-[11px] text-slate-400">
+              <div class="p-3 rounded-xl bg-[#161B22] border border-[#2B3545] shadow-inner">
                 <div class="text-cyan-400 font-bold">CLONE_NEWPID</div>
-                <div class="text-[10px] text-slate-500">Isolated PID 1 tree</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Isolated PID 1 tree</div>
               </div>
-              <div class="p-2 rounded bg-[#161B22] border border-[#2B3545]">
+              <div class="p-3 rounded-xl bg-[#161B22] border border-[#2B3545] shadow-inner">
                 <div class="text-cyan-400 font-bold">CLONE_NEWNET</div>
-                <div class="text-[10px] text-slate-500">Virtual veth interface</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Virtual veth interface</div>
               </div>
-              <div class="p-2 rounded bg-[#161B22] border border-[#2B3545]">
+              <div class="p-3 rounded-xl bg-[#161B22] border border-[#2B3545] shadow-inner">
                 <div class="text-emerald-400 font-bold">memory.max</div>
-                <div class="text-[10px] text-slate-500">OOM Killer threshold</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">OOM Killer threshold</div>
               </div>
-              <div class="p-2 rounded bg-[#161B22] border border-[#2B3545]">
+              <div class="p-3 rounded-xl bg-[#161B22] border border-[#2B3545] shadow-inner">
                 <div class="text-indigo-400 font-bold">cpu.max</div>
-                <div class="text-[10px] text-slate-500">CFS bandwidth quota</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">CFS bandwidth quota</div>
               </div>
             </div>
           </div>

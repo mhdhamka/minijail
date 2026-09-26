@@ -27,9 +27,6 @@ import {
   Skull, 
   Send, 
   Plus, 
-  Sparkles, 
-  ExternalLink,
-  ShieldCheck,
   Search,
   Copy,
   Check,
@@ -288,44 +285,44 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
 </script>
 
 <template>
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm select-none">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md select-none animate-fadeIn">
     <div 
       id="docker-container-drawer"
-      class="bg-[#161B22] border border-[#2D3848] rounded-xl w-full max-w-5xl h-[88vh] flex flex-col shadow-2xl overflow-hidden text-slate-200"
+      class="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-5xl h-[88vh] flex flex-col shadow-2xl shadow-cyan-950/30 overflow-hidden text-slate-200"
     >
-      <!-- Top Title Bar (Authentic Docker Desktop Container Header) -->
-      <div class="px-5 py-3.5 bg-[#11161D] border-b border-[#232A35] flex items-center justify-between">
+      <!-- Top Title Bar -->
+      <div class="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800/80 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <!-- Status icon dot -->
+          <!-- Status indicator -->
           <div class="relative flex items-center justify-center">
             <span 
               class="w-3 h-3 rounded-full" 
               :class="[
-                container.status === 'running' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse' :
-                container.status === 'paused' ? 'bg-amber-500' :
-                container.status === 'oom_killed' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)] animate-pulse' :
+                container.status === 'running' ? 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse' :
+                container.status === 'paused' ? 'bg-amber-400' :
+                container.status === 'oom_killed' ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)] animate-pulse' :
                 'bg-slate-500'
               ]"
             ></span>
           </div>
 
           <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-base font-bold text-white font-mono">{{ container.name }}</h2>
+            <div class="flex items-center gap-2.5">
+              <h2 class="text-sm font-bold text-white font-mono tracking-wide">{{ container.name }}</h2>
               <span 
-                class="text-[11px] font-mono px-2 py-0.5 rounded font-bold uppercase"
+                class="text-[10px] font-mono px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider"
                 :class="[
-                  container.status === 'running' ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800' :
-                  container.status === 'paused' ? 'bg-amber-950/80 text-amber-400 border border-amber-800' :
-                  container.status === 'oom_killed' ? 'bg-rose-950 text-rose-300 border border-rose-800' :
-                  'bg-slate-800 text-slate-400 border border-slate-700'
+                  container.status === 'running' ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-800/60' :
+                  container.status === 'paused' ? 'bg-amber-950/80 text-amber-400 border border-amber-800/60' :
+                  container.status === 'oom_killed' ? 'bg-rose-950 text-rose-300 border border-rose-800/60' :
+                  'bg-slate-900 text-slate-400 border border-slate-700/60'
                 ]"
               >
                 {{ container.status === 'oom_killed' ? 'OOM-Killed (137)' : container.status }}
               </span>
             </div>
-            <div class="text-xs text-slate-400 font-mono flex items-center gap-2 mt-0.5">
-              <span>Image: <strong class="text-[#0db7ed]">{{ container.image }}</strong></span>
+            <div class="text-[11px] text-slate-400 font-mono flex items-center gap-2 mt-0.5">
+              <span>Image: <strong class="text-cyan-400">{{ container.image }}</strong></span>
               <span>•</span>
               <span>ID: {{ container.id.slice(0, 12) }}</span>
               <span>•</span>
@@ -336,12 +333,12 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
           </div>
         </div>
 
-        <!-- Quick Lifecycle Controls -->
+        <!-- Lifecycle Controls -->
         <div class="flex items-center gap-2">
           <template v-if="container.status === 'running'">
             <button 
               @click="handleAction('pause')"
-              class="px-2.5 py-1.5 rounded-lg bg-[#202836] hover:bg-[#2A3446] text-amber-400 border border-[#2E3B4E] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-700/60 text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
               title="Pause (cgroup.freeze)"
             >
               <Pause class="w-3.5 h-3.5" />
@@ -349,7 +346,7 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
             </button>
             <button 
               @click="handleAction('stop')"
-              class="px-2.5 py-1.5 rounded-lg bg-[#202836] hover:bg-[#2A3446] text-slate-200 border border-[#2E3B4E] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/60 text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
               title="Stop (SIGTERM)"
             >
               <Square class="w-3.5 h-3.5" />
@@ -357,7 +354,7 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
             </button>
             <button 
               @click="handleAction('kill')"
-              class="px-2.5 py-1.5 rounded-lg bg-rose-950/70 hover:bg-rose-900 text-rose-300 border border-rose-800/80 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/60 text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
               title="Kill (SIGKILL 137)"
             >
               <Flame class="w-3.5 h-3.5" />
@@ -367,14 +364,14 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
           <template v-else-if="container.status === 'paused'">
             <button 
               @click="handleAction('unpause')"
-              class="px-2.5 py-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="px-3 py-1.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
             >
               <Play class="w-3.5 h-3.5" />
               <span>Resume</span>
             </button>
             <button 
               @click="handleAction('stop')"
-              class="px-2.5 py-1.5 rounded-lg bg-[#202836] hover:bg-[#2A3446] text-slate-200 border border-[#2E3B4E] text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/60 text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
             >
               <Square class="w-3.5 h-3.5" />
               <span>Stop</span>
@@ -383,7 +380,7 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
           <template v-else>
             <button 
               @click="handleAction('start')"
-              class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shadow-md shadow-emerald-950"
             >
               <Play class="w-3.5 h-3.5" />
               <span>Start</span>
@@ -392,85 +389,81 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
 
           <button 
             @click="emit('close')"
-            class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#222A38] transition-colors cursor-pointer ml-2"
+            class="p-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer ml-2"
           >
             <X class="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      <!-- Docker Desktop 5 Signature Tabs: Logs, Inspect, Exec, Files, Stats -->
-      <div class="px-5 bg-[#11161D] border-b border-[#232A35] flex items-center gap-2 overflow-x-auto text-xs font-medium">
-        <!-- 1. Logs Tab -->
+      <!-- Navigation Tabs -->
+      <div class="px-5 bg-slate-900/50 border-b border-slate-800/80 flex items-center gap-2 overflow-x-auto text-xs font-medium scrollbar-none">
         <button 
           @click="activeTab = 'logs'"
           class="px-4 py-2.5 border-b-2 transition-all flex items-center gap-2 cursor-pointer"
-          :class="activeTab === 'logs' ? 'border-[#1D63ED] text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
+          :class="activeTab === 'logs' ? 'border-cyan-500 text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
         >
           <FileText class="w-4 h-4 text-cyan-400" />
           <span>Logs</span>
         </button>
 
-        <!-- 2. Exec (Terminal) Tab -->
         <button 
           @click="activeTab = 'exec'"
           class="px-4 py-2.5 border-b-2 transition-all flex items-center gap-2 cursor-pointer font-mono"
-          :class="activeTab === 'exec' ? 'border-[#1D63ED] text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
+          :class="activeTab === 'exec' ? 'border-cyan-500 text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
         >
           <TerminalIcon class="w-4 h-4 text-emerald-400" />
           <span>Exec</span>
         </button>
 
-        <!-- 3. Inspect (JSON) Tab -->
         <button 
           @click="activeTab = 'inspect'"
           class="px-4 py-2.5 border-b-2 transition-all flex items-center gap-2 cursor-pointer font-mono"
-          :class="activeTab === 'inspect' ? 'border-[#1D63ED] text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
+          :class="activeTab === 'inspect' ? 'border-cyan-500 text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
         >
           <Code class="w-4 h-4 text-amber-400" />
           <span>Inspect</span>
         </button>
 
-        <!-- 4. Files (OverlayFS) Tab -->
         <button 
           @click="activeTab = 'files'"
           class="px-4 py-2.5 border-b-2 transition-all flex items-center gap-2 cursor-pointer"
-          :class="activeTab === 'files' ? 'border-[#1D63ED] text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
+          :class="activeTab === 'files' ? 'border-cyan-500 text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
         >
           <FolderTree class="w-4 h-4 text-indigo-400" />
           <span>Files</span>
         </button>
 
-        <!-- 5. Stats & Cgroups Tab -->
         <button 
           @click="activeTab = 'stats'"
           class="px-4 py-2.5 border-b-2 transition-all flex items-center gap-2 cursor-pointer"
-          :class="activeTab === 'stats' ? 'border-[#1D63ED] text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
+          :class="activeTab === 'stats' ? 'border-cyan-500 text-white font-semibold' : 'border-transparent text-slate-400 hover:text-slate-200'"
         >
           <Activity class="w-4 h-4 text-rose-400" />
           <span>Stats & Cgroups</span>
         </button>
       </div>
 
-      <!-- Tab Content Area -->
-      <div class="flex-1 overflow-hidden flex flex-col bg-[#0F1318]">
-        <!-- TAB 1: LOGS -->
+      <!-- Content Views -->
+      <div class="flex-1 overflow-hidden flex flex-col bg-slate-950">
+        
+        <!-- LOGS TAB -->
         <div v-if="activeTab === 'logs'" class="flex-1 flex flex-col overflow-hidden">
-          <div class="p-2.5 px-4 bg-[#161B22] border-b border-[#232A35] flex items-center justify-between gap-3 text-xs">
+          <div class="p-3 px-5 bg-slate-900/40 border-b border-slate-800/60 flex items-center justify-between gap-3 text-xs">
             <div class="relative flex-1 max-w-sm">
-              <Search class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <Search class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input 
                 v-model="logFilter"
                 type="text" 
-                placeholder="Filter logs..."
-                class="w-full pl-8 pr-3 py-1 rounded bg-[#0E1217] border border-[#2B3545] text-xs font-mono text-slate-200 focus:outline-none focus:border-[#1D63ED]"
+                placeholder="Filter container output stream..."
+                class="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyan-500/50 transition-all shadow-inner"
               />
             </div>
             <div class="flex items-center gap-3 text-slate-400 font-mono text-[11px]">
               <span>{{ filteredLogs.length }} lines</span>
               <button 
                 @click="emit('refresh')"
-                class="p-1 rounded hover:bg-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
                 title="Refresh Logs"
               >
                 <RefreshCw class="w-3.5 h-3.5" />
@@ -480,17 +473,17 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
 
           <div 
             ref="logsContainerRef"
-            class="flex-1 p-4 overflow-y-auto font-mono text-xs space-y-1 text-slate-300 selection:bg-cyan-500/30 leading-relaxed"
+            class="flex-1 p-5 overflow-y-auto font-mono text-xs space-y-1.5 text-slate-300 selection:bg-cyan-500/30 leading-relaxed"
           >
             <div 
               v-for="(log, idx) in filteredLogs" 
               :key="idx" 
-              class="flex items-start gap-3 hover:bg-[#1A222D]/60 px-1 py-0.5 rounded"
+              class="flex items-start gap-3 hover:bg-slate-900/40 px-2 py-1 rounded-lg transition-colors"
             >
-              <span class="text-slate-500 text-[11px] select-none shrink-0 w-20">{{ log.timestamp }}</span>
+              <span class="text-slate-500 text-[10px] select-none shrink-0 w-20 pt-0.5">{{ log.timestamp }}</span>
               <span 
-                class="text-[10px] uppercase font-bold px-1 rounded select-none shrink-0"
-                :class="log.stream === 'stderr' ? 'bg-rose-950 text-rose-400' : log.stream === 'system' ? 'bg-indigo-950 text-indigo-300' : 'bg-slate-800 text-cyan-300'"
+                class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded select-none shrink-0"
+                :class="log.stream === 'stderr' ? 'bg-rose-950/80 text-rose-400 border border-rose-900/50' : log.stream === 'system' ? 'bg-indigo-950/80 text-indigo-300 border border-indigo-900/50' : 'bg-slate-900 text-cyan-300 border border-slate-800'"
               >
                 {{ log.stream }}
               </span>
@@ -501,49 +494,45 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
                 {{ log.message }}
               </span>
             </div>
-            <div v-if="filteredLogs.length === 0" class="text-slate-500 py-8 text-center">
-              No logs recorded yet.
+            <div v-if="filteredLogs.length === 0" class="text-slate-500 py-12 text-center">
+              No matching log entries found.
             </div>
           </div>
         </div>
 
-        <!-- TAB 2: EXEC (TERMINAL) -->
+        <!-- EXEC TAB -->
         <div v-else-if="activeTab === 'exec'" class="flex-1 flex flex-col overflow-hidden">
-          <!-- Terminal Quick commands -->
-          <div class="px-4 py-2 bg-[#161B22] border-b border-[#232A35] flex items-center gap-2 overflow-x-auto text-[11px] font-mono">
-            <span class="text-slate-400 shrink-0 flex items-center gap-1 text-[10px]">
-              <Sparkles class="w-3 h-3 text-cyan-400" /> Quick Exec:
-            </span>
-            <button @click="runCommand('uname -a')" class="px-2 py-0.5 rounded bg-[#202836] hover:bg-[#2A3649] text-cyan-300 border border-[#2D394C] transition-colors shrink-0 cursor-pointer">
+          <div class="px-5 py-2.5 bg-slate-900/40 border-b border-slate-800/60 flex items-center gap-2 overflow-x-auto text-[11px] font-mono scrollbar-none">
+            <span class="text-slate-500 shrink-0 text-[10px] uppercase font-sans font-medium">Quick Exec:</span>
+            <button @click="runCommand('uname -a')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-800 hover:border-cyan-500/40 transition-all shrink-0 cursor-pointer">
               uname -a
             </button>
-            <button @click="runCommand('hostname')" class="px-2 py-0.5 rounded bg-[#202836] hover:bg-[#2A3649] text-cyan-300 border border-[#2D394C] transition-colors shrink-0 cursor-pointer">
+            <button @click="runCommand('hostname')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-800 hover:border-cyan-500/40 transition-all shrink-0 cursor-pointer">
               hostname
             </button>
-            <button @click="runCommand('ps aux')" class="px-2 py-0.5 rounded bg-[#202836] hover:bg-[#2A3649] text-emerald-300 border border-[#2D394C] transition-colors shrink-0 cursor-pointer">
+            <button @click="runCommand('ps aux')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-800 hover:border-emerald-500/40 transition-all shrink-0 cursor-pointer">
               ps aux
             </button>
-            <button @click="runCommand('cat /etc/os-release')" class="px-2 py-0.5 rounded bg-[#202836] hover:bg-[#2A3649] text-slate-300 border border-[#2D394C] transition-colors shrink-0 cursor-pointer">
+            <button @click="runCommand('cat /etc/os-release')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-slate-700 transition-all shrink-0 cursor-pointer">
               cat /etc/os-release
             </button>
-            <button @click="runCommand('ip a')" class="px-2 py-0.5 rounded bg-[#202836] hover:bg-[#2A3649] text-blue-300 border border-[#2D394C] transition-colors shrink-0 cursor-pointer">
+            <button @click="runCommand('ip a')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-blue-300 border border-slate-800 hover:border-blue-500/40 transition-all shrink-0 cursor-pointer">
               ip a
             </button>
           </div>
 
-          <!-- Terminal viewport -->
           <div 
             ref="terminalBody"
-            class="flex-1 p-4 overflow-y-auto bg-[#0A0D12] font-mono text-xs space-y-2 selection:bg-[#1D63ED]/40"
+            class="flex-1 p-5 overflow-y-auto bg-slate-950 font-mono text-xs space-y-2 selection:bg-cyan-500/30"
           >
             <div 
               v-for="(line, idx) in terminalLines" 
               :key="idx" 
-              class="flex items-start gap-2 leading-relaxed"
+              class="flex items-start gap-3 leading-relaxed"
             >
-              <span class="text-slate-600 text-[10px] select-none shrink-0 w-14">{{ line.time }}</span>
+              <span class="text-slate-600 text-[10px] select-none shrink-0 w-14 pt-0.5">{{ line.time }}</span>
               <template v-if="line.stream === 'stdin'">
-                <span class="text-[#0db7ed] font-semibold select-none">root@{{ container.namespaces.hostname }}:/#</span>
+                <span class="text-cyan-400 font-semibold select-none">root@{{ container.namespaces.hostname }}:/#</span>
                 <span class="text-white font-medium whitespace-pre-wrap break-all">{{ line.text.replace('$ ', '') }}</span>
               </template>
               <template v-else-if="line.stream === 'stderr'">
@@ -554,29 +543,28 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
                 <span class="text-slate-300 whitespace-pre-wrap break-all">{{ line.text }}</span>
               </template>
             </div>
-            <div v-if="execLoading" class="flex items-center gap-2 text-cyan-400 pt-2 text-[11px]">
-              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
-              <span>Executing in container PID namespace...</span>
+            <div v-if="execLoading" class="flex items-center gap-2.5 text-cyan-400 pt-2 text-[11px] bg-cyan-950/20 px-3 py-2 rounded-lg border border-cyan-900/30 w-fit">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+              <span>Executing in isolated container PID namespace...</span>
             </div>
           </div>
 
-          <!-- Interactive CLI prompt -->
-          <div class="p-3 border-t border-[#232A35] bg-[#161B22]">
-            <form @submit.prevent="runCommand()" class="flex items-center gap-2 font-mono text-xs">
-              <span class="text-[#0db7ed] font-semibold shrink-0 select-none">
+          <div class="p-3.5 border-t border-slate-800/80 bg-slate-900/90">
+            <form @submit.prevent="runCommand()" class="flex items-center gap-3 font-mono text-xs">
+              <span class="text-cyan-400 font-semibold shrink-0 select-none">
                 root@{{ container.namespaces.hostname }}:/#
               </span>
               <input 
                 v-model="inputCommand"
                 type="text" 
                 placeholder="Type command (e.g. uname -a, ps aux, touch /tmp/demo.txt)..."
-                class="flex-1 bg-transparent text-slate-100 placeholder:text-slate-600 focus:outline-none"
+                class="flex-1 bg-slate-950/80 border border-slate-800 focus:border-cyan-500/50 rounded-xl px-3.5 py-2 text-slate-100 placeholder:text-slate-600 focus:outline-none transition-all shadow-inner"
                 :disabled="execLoading || container.status !== 'running'"
               />
               <button 
                 type="submit" 
                 :disabled="execLoading || !inputCommand.trim() || container.status !== 'running'"
-                class="px-3 py-1.5 rounded-lg bg-[#1D63ED] hover:bg-[#1A57D0] disabled:opacity-30 text-white font-medium flex items-center gap-1 transition-colors cursor-pointer"
+                class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 disabled:opacity-30 text-white font-medium flex items-center gap-1.5 transition-all shadow-lg shadow-cyan-950 cursor-pointer"
               >
                 <Send class="w-3.5 h-3.5" />
                 <span>Send</span>
@@ -585,20 +573,20 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
           </div>
         </div>
 
-        <!-- TAB 3: INSPECT (JSON) -->
-        <div v-else-if="activeTab === 'inspect'" class="flex-1 flex flex-col overflow-hidden p-4">
+        <!-- INSPECT TAB -->
+        <div v-else-if="activeTab === 'inspect'" class="flex-1 flex flex-col overflow-hidden p-5">
           <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-mono text-slate-400">docker inspect {{ container.id.slice(0, 12) }}</span>
+            <span class="text-xs font-mono text-slate-400">docker inspect <strong class="text-cyan-400">{{ container.id.slice(0, 12) }}</strong></span>
             <button 
               @click="copyInspect"
-              class="px-3 py-1.5 rounded-lg bg-[#202836] hover:bg-[#2A3649] text-xs font-medium text-slate-200 border border-[#2D394C] flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs font-medium text-slate-200 border border-slate-800 hover:border-slate-700 flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
             >
               <Check v-if="copiedInspect" class="w-3.5 h-3.5 text-emerald-400" />
               <Copy v-else class="w-3.5 h-3.5 text-slate-400" />
               <span>{{ copiedInspect ? 'Copied JSON' : 'Copy JSON' }}</span>
             </button>
           </div>
-          <pre class="flex-1 p-4 rounded-xl bg-[#0B0E14] border border-[#232A35] text-cyan-200 text-xs font-mono overflow-auto leading-relaxed selection:bg-[#1D63ED]/30"><code>{{ JSON.stringify({
+          <pre class="flex-1 p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 text-cyan-200 text-xs font-mono overflow-auto leading-relaxed selection:bg-cyan-500/30"><code>{{ JSON.stringify({
   Id: container.id,
   Created: container.createdAt,
   Path: container.command,
@@ -640,84 +628,82 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
 }, null, 2) }}</code></pre>
         </div>
 
-        <!-- TAB 4: FILES (OVERLAYFS) -->
-        <div v-else-if="activeTab === 'files'" class="flex-1 overflow-y-auto p-5 space-y-5 font-mono text-xs">
-          <!-- Architecture Banner -->
-          <div class="p-4 rounded-xl bg-[#161B22] border border-[#232A35] space-y-3">
+        <!-- FILES TAB -->
+        <div v-else-if="activeTab === 'files'" class="flex-1 overflow-y-auto p-6 space-y-6 font-mono text-xs">
+          <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 space-y-4 shadow-sm">
             <div class="text-xs font-bold text-slate-200 flex items-center justify-between">
               <span class="flex items-center gap-2">
                 <FolderTree class="w-4 h-4 text-cyan-400" />
                 <span>OverlayFS Layering & Copy-on-Write (COW)</span>
               </span>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+              <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 font-sans">
                 pivot_root active
               </span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px]">
-              <div class="p-3 rounded-lg bg-[#0F1318] border border-[#232A35]">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-[11px]">
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
                 <div class="text-slate-400 font-bold">MergedDir (Container /)</div>
                 <div class="text-emerald-400 font-semibold mt-1 truncate">{{ container.rootfs.mergedDir }}</div>
-                <div class="text-[10px] text-slate-500 mt-0.5">Isolated mount namespace root</div>
+                <div class="text-[10px] text-slate-500 mt-1">Isolated mount namespace root</div>
               </div>
-              <div class="p-3 rounded-lg bg-[#0F1318] border border-[#232A35]">
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
                 <div class="text-slate-400 font-bold">UpperDir (Diff Layer)</div>
                 <div class="text-cyan-400 font-semibold mt-1 truncate">{{ container.rootfs.upperDir }}</div>
-                <div class="text-[10px] text-slate-500 mt-0.5">{{ container.rootfs.modifiedFiles.length }} modified files</div>
+                <div class="text-[10px] text-slate-500 mt-1">{{ container.rootfs.modifiedFiles.length }} modified files</div>
               </div>
-              <div class="p-3 rounded-lg bg-[#0F1318] border border-[#232A35]">
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
                 <div class="text-slate-400 font-bold">LowerDir (Base Image)</div>
                 <div class="text-slate-300 font-semibold mt-1 truncate">{{ container.rootfs.lowerDir }}</div>
-                <div class="text-[10px] text-slate-500 mt-0.5">Read-only base tarball</div>
+                <div class="text-[10px] text-slate-500 mt-1">Read-only base tarball</div>
               </div>
             </div>
           </div>
 
-          <!-- Touch file demo -->
-          <div class="p-4 rounded-xl bg-[#161B22] border border-[#232A35] space-y-3">
+          <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 space-y-4 shadow-sm">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-slate-200">Copy-on-Write (UpperDir) File Mutations</span>
               <span class="text-[10px] text-slate-500">Tracked in real-time</span>
             </div>
 
-            <form @submit.prevent="handleCreateFile" class="flex items-center gap-2">
+            <form @submit.prevent="handleCreateFile" class="flex items-center gap-2.5">
               <input 
                 v-model="newFileName"
                 type="text" 
                 placeholder="/app/config.json or /tmp/test.log"
-                class="flex-1 px-3 py-1.5 rounded-lg bg-[#0E1217] border border-[#2B3545] text-slate-100 text-xs focus:outline-none focus:border-[#1D63ED]"
+                class="flex-1 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:outline-none focus:border-cyan-500/50 transition-all shadow-inner"
                 :disabled="container.status !== 'running'"
               />
               <button 
                 type="submit"
                 :disabled="!newFileName.trim() || isCreatingFile || container.status !== 'running'"
-                class="px-3 py-1.5 rounded-lg bg-[#1D63ED] hover:bg-[#1A57D0] disabled:opacity-30 text-white font-medium text-xs flex items-center gap-1 transition-colors cursor-pointer"
+                class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-30 text-white font-medium text-xs flex items-center gap-1.5 transition-all shadow-md shadow-cyan-950 cursor-pointer"
               >
                 <Plus class="w-3.5 h-3.5" />
                 <span>Touch File</span>
               </button>
             </form>
 
-            <div class="rounded-lg border border-[#232A35] overflow-hidden">
+            <div class="rounded-xl border border-slate-800/80 overflow-hidden">
               <table class="w-full text-left text-xs">
-                <thead class="bg-[#11161D] text-slate-400 border-b border-[#232A35]">
+                <thead class="bg-slate-900/90 text-slate-400 border-b border-slate-800">
                   <tr>
-                    <th class="px-3 py-2">File Path</th>
-                    <th class="px-3 py-2">Action</th>
-                    <th class="px-3 py-2">Size</th>
-                    <th class="px-3 py-2">Timestamp</th>
+                    <th class="px-3.5 py-2.5">File Path</th>
+                    <th class="px-3.5 py-2.5">Action</th>
+                    <th class="px-3.5 py-2.5">Size</th>
+                    <th class="px-3.5 py-2.5">Timestamp</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-[#232A35]">
-                  <tr v-for="(file, idx) in container.rootfs.modifiedFiles" :key="idx" class="hover:bg-[#1A222D]">
-                    <td class="px-3 py-2 text-cyan-300 font-semibold">{{ file.path }}</td>
-                    <td class="px-3 py-2">
-                      <span class="px-1.5 py-0.5 rounded text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800">
+                <tbody class="divide-y divide-slate-800/60">
+                  <tr v-for="(file, idx) in container.rootfs.modifiedFiles" :key="idx" class="hover:bg-slate-900/40 transition-colors">
+                    <td class="px-3.5 py-2.5 text-cyan-300 font-semibold">{{ file.path }}</td>
+                    <td class="px-3.5 py-2.5">
+                      <span class="px-2 py-0.5 rounded text-[10px] bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">
                         {{ file.action }}
                       </span>
                     </td>
-                    <td class="px-3 py-2 text-slate-400">{{ file.sizeBytes }} B</td>
-                    <td class="px-3 py-2 text-slate-500">{{ file.timestamp }}</td>
+                    <td class="px-3.5 py-2.5 text-slate-400">{{ file.sizeBytes }} B</td>
+                    <td class="px-3.5 py-2.5 text-slate-500">{{ file.timestamp }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -725,62 +711,61 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
           </div>
         </div>
 
-        <!-- TAB 5: STATS & CGROUPS -->
-        <div v-else-if="activeTab === 'stats'" class="flex-1 overflow-y-auto p-5 space-y-5 font-mono text-xs">
-          <!-- Alert notification if OOM-killed -->
-          <div v-if="statsAlert" class="p-3 bg-rose-950/80 border border-rose-800 text-rose-200 text-xs flex items-start gap-2 rounded-lg">
+        <!-- STATS & CGROUPS TAB -->
+        <div v-else-if="activeTab === 'stats'" class="flex-1 overflow-y-auto p-6 space-y-6 font-mono text-xs">
+          <div v-if="statsAlert" class="p-3.5 bg-rose-950/60 border border-rose-800/80 text-rose-200 text-xs flex items-start gap-2.5 rounded-xl shadow-lg">
             <AlertTriangle class="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
             <div>{{ statsAlert }}</div>
           </div>
 
-          <!-- Memory cgroup -->
-          <div class="p-4 rounded-xl bg-[#161B22] border border-[#232A35] space-y-3">
+          <!-- Memory Controller -->
+          <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 space-y-4 shadow-sm">
             <div class="flex items-center justify-between">
               <span class="text-sm font-bold text-slate-200 flex items-center gap-2">
                 <HardDrive class="w-4 h-4 text-cyan-400" />
                 <span>Memory Controller (memory.max)</span>
               </span>
-              <span class="text-xs px-2 py-0.5 rounded bg-[#202836] text-slate-300 border border-[#2B3545]">
+              <span class="text-xs px-2.5 py-1 rounded-xl bg-slate-950 text-slate-300 border border-slate-800">
                 OOM Kill Events: <strong class="text-rose-400">{{ container.cgroups.oomKillEvents }}</strong>
               </span>
             </div>
 
             <div>
-              <div class="flex justify-between text-xs mb-1.5">
+              <div class="flex justify-between text-xs mb-2">
                 <span class="text-slate-400">Memory Usage vs Hard Limit:</span>
                 <span :class="memPercent > 80 ? 'text-rose-400 font-bold' : 'text-slate-200'">
                   {{ memUsedMB }} MB / {{ memLimitMB }} MB ({{ memPercent }}%)
                 </span>
               </div>
-              <div class="w-full h-3 rounded-full bg-[#0F1318] border border-[#232A35] overflow-hidden">
+              <div class="w-full h-3 rounded-full bg-slate-950 border border-slate-800 overflow-hidden p-0.5 shadow-inner">
                 <div 
                   class="h-full rounded-full transition-all duration-300"
-                  :class="memPercent > 85 ? 'bg-rose-500' : memPercent > 60 ? 'bg-amber-500' : 'bg-[#1D63ED]'"
+                  :class="memPercent > 85 ? 'bg-rose-500' : memPercent > 60 ? 'bg-amber-500' : 'bg-cyan-500'"
                   :style="{ width: `${memPercent}%` }"
                 ></div>
               </div>
             </div>
 
-            <div class="pt-2 border-t border-[#232A35] flex items-center gap-2 flex-wrap">
-              <span class="text-[11px] text-slate-400">Stress Allocator:</span>
+            <div class="pt-3 border-t border-slate-800/80 flex items-center gap-2.5 flex-wrap">
+              <span class="text-[11px] text-slate-400 font-sans">Stress Allocator:</span>
               <button
                 @click="handleStressMem(16)"
                 :disabled="statsLoading || container.status !== 'running'"
-                class="px-2.5 py-1.5 rounded-lg bg-[#202836] hover:bg-[#2A3446] disabled:opacity-30 text-cyan-300 border border-[#2D394C] transition-colors cursor-pointer text-xs"
+                class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-900 disabled:opacity-30 text-cyan-300 border border-slate-800 transition-all cursor-pointer text-xs shadow-sm"
               >
                 +16 MB
               </button>
               <button
                 @click="handleStressMem(32)"
                 :disabled="statsLoading || container.status !== 'running'"
-                class="px-2.5 py-1.5 rounded-lg bg-[#202836] hover:bg-[#2A3446] disabled:opacity-30 text-cyan-300 border border-[#2D394C] transition-colors cursor-pointer text-xs"
+                class="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-900 disabled:opacity-30 text-cyan-300 border border-slate-800 transition-all cursor-pointer text-xs shadow-sm"
               >
                 +32 MB
               </button>
               <button
                 @click="handleForceOom"
                 :disabled="statsLoading || container.status !== 'running'"
-                class="px-3 py-1.5 rounded-lg bg-rose-950 hover:bg-rose-900 disabled:opacity-30 text-rose-300 border border-rose-800 transition-colors cursor-pointer text-xs font-bold flex items-center gap-1.5 ml-auto"
+                class="px-3.5 py-1.5 rounded-xl bg-rose-950 hover:bg-rose-900 disabled:opacity-30 text-rose-300 border border-rose-800/80 transition-all cursor-pointer text-xs font-bold flex items-center gap-1.5 ml-auto shadow-sm"
                 title="Exceed memory.max to trigger kernel OOM killer"
               >
                 <Skull class="w-4 h-4 text-rose-400" />
@@ -789,35 +774,35 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
             </div>
           </div>
 
-          <!-- CPU cgroup -->
-          <div class="p-4 rounded-xl bg-[#161B22] border border-[#232A35] space-y-3">
+          <!-- CPU Controller -->
+          <div class="p-5 rounded-2xl bg-slate-900/50 border border-slate-800/80 space-y-4 shadow-sm">
             <div class="flex items-center justify-between">
               <span class="text-sm font-bold text-slate-200 flex items-center gap-2">
                 <Cpu class="w-4 h-4 text-indigo-400" />
                 <span>CFS Bandwidth Control (cpu.max)</span>
               </span>
-              <span class="text-xs px-2 py-0.5 rounded bg-[#202836] text-indigo-300 border border-[#2B3545]">
+              <span class="text-xs px-2.5 py-1 rounded-xl bg-slate-950 text-indigo-300 border border-slate-800">
                 Quota: {{ container.cgroups.cpuQuotaUs }}us / {{ container.cgroups.cpuPeriodUs }}us
               </span>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="p-3 rounded-lg bg-[#0F1318] border border-[#232A35]">
+            <div class="grid grid-cols-2 gap-3.5 text-xs">
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
                 <div class="text-slate-500 text-[10px]">CFS Quota Allocation</div>
-                <div class="text-base font-bold text-slate-100 mt-0.5">{{ cpuQuotaCores }} Cores</div>
+                <div class="text-base font-bold text-slate-100 mt-1">{{ cpuQuotaCores }} Cores</div>
               </div>
-              <div class="p-3 rounded-lg bg-[#0F1318] border border-[#232A35]">
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
                 <div class="text-slate-500 text-[10px]">CFS Throttled Periods</div>
-                <div class="text-base font-bold text-amber-400 mt-0.5">{{ container.cgroups.throttlePeriods }} events</div>
+                <div class="text-base font-bold text-amber-400 mt-1">{{ container.cgroups.throttlePeriods }} events</div>
               </div>
             </div>
 
-            <div class="pt-2 border-t border-[#232A35] flex items-center justify-between">
-              <span class="text-[11px] text-slate-400">CFS Scheduler Stress:</span>
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+              <span class="text-[11px] text-slate-400 font-sans">CFS Scheduler Stress:</span>
               <button
                 @click="handleStressCpu"
                 :disabled="statsLoading || container.status !== 'running'"
-                class="px-3 py-1.5 rounded-lg bg-indigo-950 hover:bg-indigo-900 disabled:opacity-30 text-indigo-200 border border-indigo-800 transition-colors cursor-pointer text-xs flex items-center gap-1.5"
+                class="px-3.5 py-1.5 rounded-xl bg-indigo-950 hover:bg-indigo-900 disabled:opacity-30 text-indigo-200 border border-indigo-800/80 transition-all cursor-pointer text-xs flex items-center gap-1.5 shadow-sm"
               >
                 <Flame class="w-3.5 h-3.5 text-indigo-400" />
                 <span>Stress CPU (Trigger Throttling)</span>
@@ -825,6 +810,7 @@ async function handleAction(action: 'start' | 'stop' | 'pause' | 'unpause' | 'ki
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
