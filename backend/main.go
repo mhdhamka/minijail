@@ -16,14 +16,23 @@ type Server struct {
 	cli    *runtime.CliInterpreter
 }
 
-func enableCORS(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+// CORSMiddleware handles headers globally for all requests, including preflight OPTIONS.
+func CORSMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func jsonResponse(w http.ResponseWriter, statusCode int, data interface{}) {
-	enableCORS(w)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
@@ -36,12 +45,6 @@ func errorResponse(w http.ResponseWriter, statusCode int, message string) {
 }
 
 func (s *Server) handleContainers(w http.ResponseWriter, r *http.Request) {
-	enableCORS(w)
-	if r.Method == http.MethodOptions {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
 	switch r.Method {
 	case http.MethodGet:
 		containers := s.engine.List()
@@ -58,7 +61,6 @@ func (s *Server) handleContainers(w http.ResponseWriter, r *http.Request) {
 			errorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
-		// Optionally auto-start if created
 		_ = s.engine.Start(c.ID)
 		jsonResponse(w, http.StatusCreated, c)
 
@@ -68,21 +70,22 @@ func (s *Server) handleContainers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleContainerDetail(w http.ResponseWriter, r *http.Request) {
-	enableCORS(w)
-	if r.Method == http.MethodOptions {
-		w.WriteHeader(http.StatusOK)
+	// Cleanly extract path parameters: /api/containers/{id}/{action}
+	path := strings.TrimPrefix(r.URL.Path, "/api/containers/")
+	parts := strings.SplitN(path, "/", 2)
+	id := parts[0]
+	
+	if id == "" {
+		errorResponse(w, http.StatusBadRequest, "Container ID is required")
 		return
 	}
 
-	// Path format: /api/containers/{id}/{action}
-	path := strings.TrimPrefix(r.URL.Path, "/api/containers/")
-	parts := strings.Split(path, "/")
-	id := parts[0]
 	action := ""
 	if len(parts) > 1 {
 		action = parts[1]
 	}
 
+	// Base container operations (No sub-action)
 	if action == "" {
 		switch r.Method {
 		case http.MethodGet:
@@ -92,54 +95,38 @@ func (s *Server) handleContainerDetail(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			jsonResponse(w, http.StatusOK, c)
+
 		case http.MethodDelete:
 			if err := s.engine.Remove(id); err != nil {
 				errorResponse(w, http.StatusBadRequest, err.Error())
 				return
 			}
 			jsonResponse(w, http.StatusOK, map[string]string{"status": "deleted", "id": id})
+
 		default:
 			errorResponse(w, http.StatusMethodNotAllowed, "Method not allowed")
 		}
 		return
 	}
 
-	// Actions: start, stop, pause, unpause, kill, exec, stress-mem, stress-cpu
+	// Container state mutations and sub-actions
 	switch action {
-	case "start":
-		if err := s.engine.Start(id); err != nil {
-			errorResponse(w, http.StatusBadRequest, err.Error())
-			return
+	case "start", "stop", "pause", "unpause", "kill":
+		var err error
+		switch action {
+		case "start":
+			err = s.engine.Start(id)
+		case "stop":
+			err = s.engine.Stop(id)
+		case "pause":
+			err = s.engine.Pause(id)
+		case "unpause":
+			err = s.engine.Unpause(id)
+		case "kill":
+			err = s.engine.Kill(id)
 		}
-		c, _ := s.engine.Get(id)
-		jsonResponse(w, http.StatusOK, c)
 
-	case "stop":
-		if err := s.engine.Stop(id); err != nil {
-			errorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
-		c, _ := s.engine.Get(id)
-		jsonResponse(w, http.StatusOK, c)
-
-	case "pause":
-		if err := s.engine.Pause(id); err != nil {
-			errorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
-		c, _ := s.engine.Get(id)
-		jsonResponse(w, http.StatusOK, c)
-
-	case "unpause":
-		if err := s.engine.Unpause(id); err != nil {
-			errorResponse(w, http.StatusBadRequest, err.Error())
-			return
-		}
-		c, _ := s.engine.Get(id)
-		jsonResponse(w, http.StatusOK, c)
-
-	case "kill":
-		if err := s.engine.Kill(id); err != nil {
+		if err != nil {
 			errorResponse(w, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -160,10 +147,9 @@ func (s *Server) handleContainerDetail(w http.ResponseWriter, r *http.Request) {
 		jsonResponse(w, http.StatusOK, resp)
 
 	case "stress-mem":
-		type StressMemReq struct {
+		var req struct {
 			DeltaMB int64 `json:"deltaMb"`
 		}
-		var req StressMemReq
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		if req.DeltaMB <= 0 {
 			req.DeltaMB = 20
@@ -192,12 +178,6 @@ func (s *Server) handleContainerDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleCli(w http.ResponseWriter, r *http.Request) {
-	enableCORS(w)
-	if r.Method == http.MethodOptions {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
 	if r.Method != http.MethodPost {
 		errorResponse(w, http.StatusMethodNotAllowed, "Method not allowed")
 		return
@@ -214,17 +194,10 @@ func (s *Server) handleCli(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handlePrimitives(w http.ResponseWriter, r *http.Request) {
-	enableCORS(w)
-	if r.Method == http.MethodOptions {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-	primitives := runtime.GetKernelPrimitivesData()
-	jsonResponse(w, http.StatusOK, primitives)
+	jsonResponse(w, http.StatusOK, runtime.GetKernelPrimitivesData())
 }
 
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
-	enableCORS(w)
 	jsonResponse(w, http.StatusOK, map[string]interface{}{
 		"status":  "ok",
 		"runtime": "Minijail-Go Engine v1.0",
@@ -249,9 +222,18 @@ func main() {
 	mux.HandleFunc("/api/containers", srv.handleContainers)
 	mux.HandleFunc("/api/containers/", srv.handleContainerDetail)
 
+	// Wrap the default mux with global CORS middleware
+	handler := CORSMiddleware(mux)
+
 	addr := "0.0.0.0:" + port
 	fmt.Printf("[Minijail-Go] Container Runtime Engine listening on http://%s\n", addr)
-	if err := http.ListenAndServe(addr, mux); err != nil {
+	
+	server := &http.Server{
+		Addr:    addr,
+		Handler: handler,
+	}
+
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
 }
